@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SshConfigs">
+    <configs>
+      <sshConfig host="170.9.224.83" id="7d379e28-1df4-47b5-8498-fcae690f979c" keyPath="$PROJECT_DIR$/../HomeServerLogins/Oracle Login/ssh-key-2026-02-28" port="22" nameFormat="DESCRIPTIVE" username="awesomeshot5051" useOpenSSHConfig="true" />
+    </configs>
+  </component>
+</project>
