@@ -1,0 +1,103 @@
+@{
+    ViewData["Title"] = "Home Lab Portfolio";
+}
+
+<div class="hero" style="min-height: auto; padding: 3rem 1rem;">
+    <div class="hero-content" style="max-width: 1200px; width: 100%;">
+        <h1 class="hero-title">Home Lab Infrastructure: england.local</h1>
+        
+        <div class="verse-box text-start" style="max-width: 100%;">
+            <p id="bible-verse" style="font-style: normal; color: #ddd; margin-bottom: 2rem;">
+                This website serves as the central documentation and configuration management for my home lab. It covers the deployment of a segmented network supporting secure remote access, redundant DNS/DHCP, multi-tier storage, and specialized database services.
+                There is also a live view of the servers with the
+            </p>
+
+            <h2 style="color: #00bfff; border-bottom: 1px solid rgba(0, 191, 255, 0.3); padding-bottom: 0.5rem;">Network Topology Overview</h2>
+            <p style="color: #ddd;">The infrastructure is built on a hierarchical model focused on high availability and secure perimeter management.</p>
+
+            <div class="row g-4 mt-2">
+                <div class="col-md-4">
+                    <h4 style="color: #00bfff;">1. Perimeter & Gateway</h4>
+                    <ul style="list-style: none; padding: 0; color: #ddd;">
+                        <li class="mb-3">
+                            <span id="cisco-firewall-status" class="status-dot offline" style="vertical-align: middle; margin-right: 6px;"></span>
+                            <a href="/docs/cisco-firewall-england" ><strong>cisco.firewall.england</strong></a>
+                            <div><strong>Role:</strong> Network Gateway / Edge Firewall.</div>
+                            <div style="font-size: 0.9rem; color: #aaa;">Manages the external-to-internal boundary, handling NAT, firewall rules, and initial traffic shaping for the entire `england.local` domain.</div>
+                        </li>
+                        <li class="mb-3">
+                            <span id="vpn-server-status" class="status-dot offline" style="vertical-align: middle; margin-right: 6px;"></span>
+                            <a href="/docs/vpn-server-england" style="color: purple; font-size: 1.1rem; text-decoration: none;"><strong>vpn.server.england</strong></a>
+                            <div><strong>Role:</strong> Remote Access Gateway.</div>
+                            <div style="font-size: 0.9rem; color: #aaa;">Provides secure internal network connectivity via OpenVPN. It also hosts a custom Java-based authentication server (WolAuthServer) for on-demand hardware wake-ups.</div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="col-md-4">
+                    <h4 style="color: #00bfff;">2. Core Network Services</h4>
+                    <ul style="list-style: none; padding: 0; color: #ddd;">
+                        <li class="mb-3">
+                            <span id="network-server-status" class="status-dot offline" style="vertical-align: middle; margin-right: 6px;"></span>
+                            <a href="/docs/network-england" ><strong>network.england</strong></a>
+                            <div><strong>Role:</strong> Primary DNS & DHCP.</div>
+                            <div style="font-size: 0.9rem; color: #aaa;">Centralized authority for local hostname resolution and IP address management (DHCP) for all lab clients and servers.</div>
+                        </li>
+                        <li class="mb-3">
+                            <span id="file-extension-status" class="status-dot offline" style="vertical-align: middle; margin-right: 6px;"></span>
+                            <a href="/docs/file-extension-england" ><strong>file.extension.england</strong></a>
+                            <div><strong>Role:</strong> Network Redundancy & Security.</div>
+                            <div style="font-size: 0.9rem; color: #aaa;">Operates as the Secondary DNS and a Pi-hole instance for network-wide ad-blocking. Additionally provides off-site backup parity for the primary storage array.</div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="col-md-4">
+                    <h4 style="color: #00bfff;">3. Data & Application Layers</h4>
+                    <ul style="list-style: none; padding: 0; color: #ddd;">
+                        <li class="mb-3">
+                            <span id="file-server-status" class="status-dot offline" style="vertical-align: middle; margin-right: 6px;"></span>
+                            <a href="/docs/file-server-england" ><strong>file.server.england</strong></a>
+                            <div><strong>Role:</strong> Primary Storage Array.</div>
+                            <div style="font-size: 0.9rem; color: #aaa;">Hosts 6.5TB of hybrid ZFS/HDD storage for centralized media and project data, accessible via SMB/NFS and iSCSI protocols.</div>
+                        </li>
+                        <li class="mb-3">
+                            <span id="proliant-status" class="status-dot offline" style="vertical-align: middle; margin-right: 6px;"></span>
+                            <a href="/docs/database-server-england" ><strong>database.server.england</strong></a>
+                            <div class="mb-1" style="padding-left: 18px;">
+                                <a href="/docs/whyoffline" style="color: #ffaa00; font-size: 0.85rem; text-decoration: none; border-bottom: 1px dashed rgba(255,170,0,0.4);">
+                                    ⚠️ Why does this always show as offline?
+                                </a>
+                            </div>
+                            <div><strong>Role:</strong> Encryption Software Backend.</div>
+                            <div style="font-size: 0.9rem; color: #aaa;">Dedicated MariaDB host optimized for a proprietary file encryption software suite, featuring automated cloud-sync and custom heartbeat orchestration.</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <hr style="border-color: rgba(0, 191, 255, 0.3); margin: 2rem 0;" />
+
+            <h2 style="color: #00bfff;">Technical Specifications: Primary Workstation</h2>
+            <ul style="color: #ddd;">
+                <li><strong>traes-pc</strong>
+                    <ul>
+                        <li><strong>OS:</strong> Pika OS (Linux) running X11.</li>
+                        <li><strong>Hardware:</strong> AMD Ryzen 9 9950X3D | 32GB DDR5-6000 | NVIDIA RTX 5060 Ti (16GB).</li>
+                        <li><strong>Function:</strong> Primary development environment and management console for the `england.local` network.</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <hr style="border-color: rgba(0, 191, 255, 0.3); margin: 2rem 0;" />
+
+            <h2 style="color: #00bfff;">Maintenance & Automation Logic</h2>
+            <p style="color: #ddd;">The lab utilizes a "Pull" documentation model. Audit scripts running on individual nodes push their current configuration states to this repository. This ensures that documentation remains an accurate reflection of the live environment, capturing:</p>
+            <ul style="color: #ddd;">
+                <li>Active systemd services and units (Linux) and rc.d (BSD).</li>
+                <li>Cron-based maintenance and power-state schedules.</li>
+                <li>Network port listening states and service dependencies.</li>
+            </ul>
+        </div>
+    </div>
+</div>

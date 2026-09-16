@@ -1,0 +1,235 @@
+@{
+    ViewData["Title"] = "vpn.server.england";
+}
+
+<div class="hero" style="min-height: auto; padding: 3rem 1rem;">
+    <div class="hero-content" style="max-width: 1400px; width: 100%;">
+        <nav aria-label="breadcrumb" class="mb-3 w-100">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/" style="color: #00bfff; text-decoration: none;">Portfolio</a></li>
+                <li class="breadcrumb-item active" style="color: #777;" aria-current="page">VPN Server</li>
+            </ol>
+        </nav>
+
+        <h1 class="hero-title">Server Documentation: vpn.server.england</h1>
+
+        <div class="verse-box text-start" style="max-width: 100%;">
+            <div class="row g-4">
+                <div class="col-xl-8" style="color: #ddd;">
+                    
+                    <h2 style="color: #00bfff;">System Overview</h2>
+                    <ul>
+                        <li><strong>Hostname:</strong> vpn.server.england</li>
+                        <li><strong>IP Address:</strong> 192.168.0.140</li>
+                        <li><strong>Operating System:</strong> Ubuntu 24.04.3 LTS (Noble Numbat)</li>
+                        <li><strong>Primary Role:</strong> Secure VPN Gateway & Internal Infrastructure Controller (WoL)</li>
+                    </ul>
+
+                    <hr style="border-color: rgba(0, 191, 255, 0.3); margin: 2rem 0;" />
+
+                    <h2 style="color: #00bfff;">Core Services</h2>
+                    <table class="table table-dark table-striped mt-2">
+                        <thead>
+                            <tr style="color: #00bfff;"><th>Service</th><th>Systemd Unit</th><th>Description</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>OpenVPN</strong></td><td><code>openvpn-@@server.service</code></td><td>Global encrypted access to the 192.168.0.x network.</td></tr>
+                            <tr><td><strong>SearXNG</strong></td><td><code>searxng.service</code></td><td>Privacy-centric metasearch engine (Containerized).</td></tr>
+                            <tr><td><strong>WolAuthServer</strong></td><td><code>wolauthserver.service</code></td><td>Proprietary Java-based authentication for network wake-ups.</td></tr>
+                            <tr><td><strong>Containerd</strong></td><td><code>containerd.service</code></td><td>Runtime for Docker-based services.</td></tr>
+                            <tr><td><strong>SSH</strong></td><td><code>ssh.service</code></td><td>Remote administrative access (Port 22).</td></tr>
+                        </tbody>
+                    </table>
+
+                    <hr style="border-color: rgba(0, 191, 255, 0.3); margin: 2rem 0;" />
+
+                    <h2 style="color: #00bfff;">Proprietary: WolAuthServer</h2>
+                    <p>The <strong>WolAuthServer</strong> serves as a secure gatekeeper for waking internal hardware.</p>
+                    <ul>
+                        <li><strong>Network:</strong> Listens on TCP Port <strong>12222</strong>.</li>
+                        <li><strong>Logic:</strong> Uses an RSA-2048 challenge-response mechanism to verify client identity.</li>
+                        <li><strong>Security:</strong> Features automated hourly key rotation with a 2-hour grace period for previous keys to prevent session drops.</li>
+                        <li><strong>Target:</strong> Primary trigger for waking the DB Server at <code>192.168.0.143</code>.</li>
+                        <li><strong>Data Path:</strong> <code>/home/<span style="background-color: #000; color: #000; border: 1px solid #00bfff;" title="redacted" aria-label="redacted">redacted</span>/wolauth/</code></li>
+                    </ul>
+
+                    <hr style="border-color: rgba(0, 191, 255, 0.3); margin: 2rem 0;" />
+
+                    <h2 style="color: #00bfff;">Automation & Maintenance</h2>
+                    <p>Scheduled tasks are managed via <code>crontab</code> and custom scripts in <code>/usr/local/bin/</code>.</p>
+                    
+                    <h4 style="color: #00bfff;">Power Management</h4>
+                    <ul>
+                        <li><strong>Nightly Suspend:</strong> (00:01) Triggers <code>nightly_suspend.sh</code>. Puts server into RAM sleep (<code>rtcwake</code>) for 8 hours.</li>
+                        <li><strong>Persistence Lock:</strong> <code>disablesuspend</code> creates <code>/tmp/suspend_disabled</code> to bypass the sleep cycle.</li>
+                        <li><strong>Manual Control:</strong> <code>suspendfor</code> allows for temporary, timed suspension of the server.</li>
+                    </ul>
+
+                    <h4 style="color: #00bfff;">System Health</h4>
+                    <ul>
+                        <li><strong>Maintenance:</strong> (05:08) <code>morning_maintaince.sh</code> runs general cleanup tasks.</li>
+                        <li><strong>Search Engine:</strong> (05:08) <code>restartSearxng</code> ensures the Docker container is refreshed daily.</li>
+                        <li><strong>Network Stability:</strong> (05:08) <code>applyNetplan</code> reapplies network configurations post-wake.</li>
+                        <li><strong>Updates:</strong> <code>daily_apt_check.sh</code> monitors package status and updates <code>/tmp/apt_upgradable_count</code>.</li>
+                    </ul>
+
+                    <h4 style="color: #00bfff;">WoL Scripts</h4>
+                    <ul>
+                        <li><strong><code>wake_db_server</code></strong>: Targets the DB Host at <code>192.168.0.143</code>.</li>
+                        <li><strong><code>wake_pc</code></strong>: Secondary broadcast for authorized desktop wake-up.</li>
+                    </ul>
+
+                    <hr style="border-color: rgba(0, 191, 255, 0.3); margin: 2rem 0;" />
+
+                    <h2 style="color: #00bfff;">Networking & Ports</h2>
+                    <ul>
+                        <li><strong>Port 12222:</strong> WolAuthServer (Internal Registration/Auth).</li>
+                        <li><strong>Port 8080:</strong> SearXNG Web Interface.</li>
+                        <li><strong>Port 22:</strong> Standard SSH.</li>
+                        <li><strong>Port 53:</strong> Systemd-resolved DNS.</li>
+                    </ul>
+
+                </div>
+
+                <div class="col-xl-4">
+                    <h3 style="color: #00bfff; border-bottom: 1px solid rgba(0, 191, 255, 0.3); padding-bottom: 0.5rem;">Live Status</h3>
+                    <div class="metrics-card mb-3">
+                        <div class="metric-row">
+                            <span class="metric-label">Status</span>
+                            <span><span id="vpn-server-status" class="status-dot offline"></span></span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">CPU</span>
+                            <span class="metric-value"><span id="vpn-server-cpuUsage">--</span></span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">CPU Temp</span>
+                            <span class="metric-value"><span id="vpn-server-cpuTemp">--</span></span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">RAM</span>
+                            <span class="metric-value"><span id="vpn-server-ramPct">--</span> (<span id="vpn-server-ramDetail">--</span>)</span>
+                        </div>
+                        <div id="vpn-server-disks-container"></div>
+                        <div class="metric-row">
+                            <span class="metric-label">Uptime</span>
+                            <span class="metric-value"><span id="vpn-server-uptime">--</span></span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">Last Seen</span>
+                            <span class="metric-value"><span id="vpn-server-lastSeen">--</span></span>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #00bfff; border-bottom: 1px solid rgba(0, 191, 255, 0.3); padding-bottom: 0.5rem;">Raw Hardware Specifications</h3>
+                    <pre style="background: rgba(0,0,0,0.6); color: #00bfff; padding: 1rem; border-radius: 8px; border: 1px solid rgba(0, 191, 255, 0.2); font-family: 'Cascadia Code', monospace; font-size: 0.85rem; white-space: pre-wrap; overflow-x: auto; max-height: 800px; overflow-y: auto;">
+System:
+  Kernel: <span style="background-color: #000; color: #000; border: 1px solid #00bfff;" title="redacted" aria-label="redacted">redacted</span> arch
+  x86_64 bits: 64
+  compiler:
+  gcc v: 13.3.0
+  Console: pty pts/1
+    Distro: Ubuntu 24.04.4 LTS (Noble Numbat)
+Machine:
+  Type: Laptop System: HP product: HP Pavilion Notebook v: N/A
+  serial: <span style="background-color: #000; color: #000; border: 1px solid #00bfff;" title="redacted" aria-label="redacted">redacted</span>
+  Mobo: HP model: 80B6 v: 81.29
+  serial: <span style="background-color: #000; color: #000; border: 1px solid #00bfff;" title="redacted" aria-label="redacted">redacted</span>
+  UEFI: American Megatrends v: <span style="background-color: #000; color: #000; border: 1px solid #00bfff;" title="redacted" aria-label="redacted">redacted</span>
+    date: <span style="background-color: #000; color: #000; border: 1px solid #00bfff;" title="redacted" aria-label="redacted">redacted</span>
+Battery:
+  ID-1: BAT0
+  charge: 0 Wh (0.0%)
+  condition: 41.1/41.1 Wh (100.0%)
+  volts: 16.6 min: 14.6
+    model: Hewlett-Packard Primary status: not charging
+CPU:
+  Info: quad core model: AMD A10 Extreme Edition Radeon R8 4C+8G bits: 64 type: MT MCP arch: Excavator rev: 1
+  cache:
+    L1: 320 KiB
+    L2: 2 MiB
+  Speed (MHz): avg: 1550 high: 2000 min/max: 1400/2000 boost: enabled cores: 1: 1400 2: 1400 3: 1400 4: 2000 bogomips: 15968
+  Flags: avx avx2 ht lm nx pae sse sse2 sse3 sse4_1 sse4_2 sse4a ssse3
+Graphics:
+  Device-1: AMD Wani [Radeon R5/R6/R7 Graphics] vendor: Hewlett-Packard driver: amdgpu v: kernel arch: GCN-3 bus-ID: 00:01.0
+  Device-2: AMD Topaz XT [Radeon R7 M260/M265 / M340/M360 M440/M445 530/535 620/625 Mobile] vendor: Hewlett-Packard driver: amdgpu v: kernel arch: GCN-3 bus-ID: 04:00.0 temp: 52.0 C
+  Device-3: Chicony HP Truevision HD driver: uvcvideo type: USB bus-ID: 2-1:2
+  Display: server: No display server data found. Headless machine? tty: 235x60
+  API: EGL v: 1.5 drivers: radeonsi,swrast platforms: active: gbm,surfaceless,device inactive: wayland,x11
+  API: OpenGL v: 4.6 compat-v: 4.5 vendor: mesa v: 25.2.8-0ubuntu0.24.04.1 note: console (EGL sourced)
+    renderer: AMD Radeon R7 M360 (radeonsi iceland ACO DRM 3.57 6.8.0-110-generic), AMD Radeon R7 Graphics (radeonsi carrizo ACO DRM 3.57 6.8.0-110-generic), llvmpipe (LLVM 20.1.2 256 bits)
+Audio:
+  Device-1: AMD Kabini HDMI/DP Audio vendor: Hewlett-Packard driver: snd_hda_intel v: kernel bus-ID: 00:01.1
+  Device-2: AMD Family 15h Audio vendor: Hewlett-Packard driver: snd_hda_intel v: kernel bus-ID: 00:09.2
+  API: ALSA v: k6.8.0-110-generic status: kernel-api
+Network:
+  Device-1: Realtek RTL810xE PCI Express Fast Ethernet vendor: Hewlett-Packard driver: r8169 v: kernel port: e000 bus-ID: 02:00.0
+  IF: eno1 state: up speed: 100 Mbps duplex: full
+  mac: <span style="background-color: #000; color: #000; border: 1px solid #00bfff;" title="redacted" aria-label="redacted">redacted</span>
+  Device-2: Intel Wireless 3165 driver: iwlwifi v: kernel bus-ID: 03:00.0
+  IF: wlo1 state: down
+  mac: <span style="background-color: #000; color: #000; border: 1px solid #00bfff;" title="redacted" aria-label="redacted">redacted</span>
+  IF-ID-1: br-cef71c39e62d state: up speed: 10000 Mbps duplex: unknown
+  mac: <span style="background-color: #000; color: #000; border: 1px solid #00bfff;" title="redacted" aria-label="redacted">redacted</span>
+  IF-ID-2: docker0 state: down
+  mac: <span style="background-color: #000; color: #000; border: 1px solid #00bfff;" title="redacted" aria-label="redacted">redacted</span>
+  IF-ID-3: tun0 state: unknown speed: 10000 Mbps duplex: full mac: N/A
+  IF-ID-4: veth02d8836 state: up speed: 10000 Mbps duplex: full
+  mac: <span style="background-color: #000; color: #000; border: 1px solid #00bfff;" title="redacted" aria-label="redacted">redacted</span>
+  IF-ID-5: veth44def66 state: up speed: 10000 Mbps duplex: full
+  mac: <span style="background-color: #000; color: #000; border: 1px solid #00bfff;" title="redacted" aria-label="redacted">redacted</span>
+  IF-ID-6: vethc4711dd state: up speed: 10000 Mbps duplex: full
+  mac: <span style="background-color: #000; color: #000; border: 1px solid #00bfff;" title="redacted" aria-label="redacted">redacted</span>
+  IF-ID-7: vethc7c65ff state: up speed: 10000 Mbps duplex: full
+  mac: <span style="background-color: #000; color: #000; border: 1px solid #00bfff;" title="redacted" aria-label="redacted">redacted</span>
+Bluetooth:
+  Device-1: Intel Bluetooth wireless interface driver: btusb v: 0.8 type: USB bus-ID: 2-2:3
+  Report: rfkill ID: hci0 rfk-id: 14 state: down bt-service: not found rfk-block: hardware: no software: no address: see --recommends
+Drives:
+  Local Storage:
+  total: 238.47 GiB
+  used: 19.87 GiB (8.3%)
+  ID-1: /dev/sda model: P3-256
+    size: 238.47 GiB
+Partition:
+  ID-1: /
+  size: 230.67 GiB
+  used: 19.66 GiB (8.5%)
+  fs: ext4
+  dev: /dev/dm-0
+    mapped: ubuntu--vg-ubuntu--lv
+  ID-2: /boot
+  size: 1.9 GiB
+  used: 200.4 MiB (10.3%)
+  fs: ext4
+  dev: /dev/sda2
+  ID-3: /boot/efi
+  size: 1.05 GiB
+  used: 6.1 MiB (0.6%)
+  fs: vfat
+  dev: /dev/sda1
+Swap:
+  ID-1: swap-1 type: file
+  size: 4 GiB
+  used: 0 KiB (0.0%)
+  file: /swap.img
+Sensors:
+  System Temperatures: cpu: 71.2 C mobo: N/A
+  Fan Speeds (rpm): N/A
+  GPU: device: amdgpu temp: 53.0 C device: amdgpu temp: 71.0 C
+Info:
+  Memory:
+  total: 12 GiB
+  note: est. available: 11.14 GiB
+  used: 2.07 GiB (18.6%)
+  Processes: 171
+  Uptime: 12d 16h 23m
+  Init: systemd target: graphical (5)
+  Packages: 890
+  Compilers: N/A
+  Shell: Sudo v: <span style="background-color: #000; color: #000; border: 1px solid #00bfff;" title="redacted" aria-label="redacted">redacted</span></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

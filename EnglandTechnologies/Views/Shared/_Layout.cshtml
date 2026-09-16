@@ -1,0 +1,291 @@
+﻿@{
+Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>@ViewData["Title"] - EnglandTechnologies</title>
+
+    <link rel="icon" type="image/png" href="/etico-96x96.png" sizes="96x96" />
+
+    <link rel="icon" type="image/svg+xml" href="/etico.svg" />
+
+    <link rel="shortcut icon" href="/etico.ico" />
+
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    
+    <style>
+        .card {
+            background-color: rgba(30, 30, 40, 0.95) !important;
+            border: 1px solid rgba(0, 191, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            border-color: rgba(0, 191, 255, 0.5);
+            box-shadow: 0 0 20px rgba(0, 191, 255, 0.15);
+        }
+        .table-dark {
+            background-color: rgba(20, 20, 30, 0.9);
+        }
+        h1, h2, h3, h4, h5 {
+            font-weight: 700;
+        }
+        .list-group-item {
+            background-color: transparent;
+            border-color: rgba(255,255,255,0.08);
+        }
+        pre {
+            background-color: #1a1a1a;
+            border: 1px solid rgba(0, 191, 255, 0.2);
+            color: #0ff;
+            padding: 1rem;
+            border-radius: 8px;
+        }
+        /* Custom scrollbar for pre blocks */
+        pre::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        pre::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.3);
+            border-radius: 4px;
+        }
+        pre::-webkit-scrollbar-thumb {
+            background: rgba(0, 191, 255, 0.5);
+            border-radius: 4px;
+        }
+        a:not(.navbar-brand):not(.drawer-link) {
+            color: #8a2be2 !important;
+        }
+        a:not(.navbar-brand):not(.drawer-link):hover {
+            color: #9b30ff !important;
+        }
+        .redacted {
+            background-color: #000;
+            color: #000;
+            padding: 0 0.5rem;
+            border-radius: 3px;
+            border: 1px solid #333;
+            cursor: help;
+        }
+
+        /* --- Global Hamburger & Side Drawer Menu Styles --- */
+        .menu-toggle-btn {
+            background: rgba(20, 20, 25, 0.85);
+            border: 1px solid rgba(0, 191, 255, 0.3);
+            color: #00bfff !important;
+            font-family: 'Cascadia Code', monospace;
+            font-size: 0.9rem;
+            padding: 6px 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+        .menu-toggle-btn:hover {
+            background: rgba(0, 191, 255, 0.1);
+            border-color: #00bfff;
+            box-shadow: 0 0 12px rgba(0, 191, 255, 0.2);
+        }
+
+        .nav-drawer {
+            position: fixed;
+            top: 0;
+            right: -320px;
+            width: 320px;
+            height: 100vh;
+            background: rgba(13, 15, 18, 0.98);
+            backdrop-filter: blur(8px);
+            border-left: 1px solid rgba(0, 191, 255, 0.2);
+            z-index: 1100;
+            transition: right 0.25s cubic-bezier(0.77, 0, 0.175, 1);
+            padding: 2rem 1.5rem;
+            box-shadow: -10px 0 30px rgba(0,0,0,0.6);
+            overflow-y: auto;
+        }
+        .nav-drawer.open {
+            right: 0;
+        }
+
+        .nav-drawer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(1px);
+            z-index: 1090;
+            display: none;
+        }
+        .nav-drawer-overlay.show {
+            display: block;
+        }
+
+        .drawer-section-title {
+            color: #00bfff;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            border-bottom: 1px solid rgba(0, 191, 255, 0.15);
+            padding-bottom: 4px;
+            margin-top: 1.75rem;
+            margin-bottom: 0.75rem;
+            font-weight: bold;
+        }
+
+        .drawer-link {
+            display: block;
+            color: #ccc !important;
+            text-decoration: none;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            transition: all 0.15s ease;
+            font-family: 'Cascadia Code', monospace;
+        }
+        .drawer-link:hover {
+            color: #fff !important;
+            background: rgba(0, 191, 255, 0.08);
+            padding-left: 14px;
+        }
+        .drawer-link.active-page {
+            color: #00bfff !important;
+            background: rgba(0, 191, 255, 0.05);
+            border-left: 2px solid #00bfff;
+            padding-left: 12px;
+        }
+        .close-drawer-btn {
+            background: transparent;
+            border: none;
+            color: #777;
+            font-size: 1.5rem;
+            line-height: 1;
+            padding: 0;
+            cursor: pointer;
+            transition: color 0.15s ease;
+        }
+        .close-drawer-btn:hover {
+            color: #ff4500;
+        }
+    </style>
+</head>
+<body>
+<div class="bg-pattern"></div>
+
+<header>
+    <nav class="navbar navbar-expand navbar-dark bg-dark border-bottom box-shadow mb-3">
+        <div class="container-fluid">
+            <a class="navbar-brand d-flex align-items-center" asp-controller="Docs" asp-action="Index">
+                <!-- Reverted image source path to map to your high-res custom vector asset -->
+                <img src="/etico-96x96.png" alt="ET" width="40" height="40" class="d-inline-block align-text-top rounded me-2"/>
+                EnglandTechnologies
+            </a>
+            <!-- Hamburger Toggle Trigger -->
+            <button class="menu-toggle-btn ms-auto" id="menuToggleBtn" aria-label="Open menu">
+                &#9776; Menu
+            </button>
+        </div>
+    </nav>
+</header>
+
+<!-- Slide-out Drawer Navigation Overlay -->
+<div class="nav-drawer-overlay" id="drawerOverlay"></div>
+
+<!-- Sidebar Drawer Component -->
+<nav class="nav-drawer" id="sideNavDrawer">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+        <span style="color: #00bfff; font-weight: bold; font-family: 'Cascadia Code', monospace;">england.local</span>
+        <button class="close-drawer-btn" id="menuCloseBtn" aria-label="Close menu">&times;</button>
+    </div>
+
+    <a class="drawer-link" href="/docs">🖥️ Portfolio Overview</a>
+
+    <div class="drawer-section-title">1. Perimeter Boundary</div>
+    <a class="drawer-link" href="/docs/cisco-firewall-england">🛡️ cisco.firewall.england</a>
+    <a class="drawer-link" href="/docs/vpn-server-england">🔑 vpn.server.england</a>
+
+    <div class="drawer-section-title">2. Core Network Services</div>
+    <a class="drawer-link" href="/docs/network-england">🌐 network.england</a>
+    <a class="drawer-link" href="/docs/file-extension-england">💾 file.extension.england</a>
+
+    <div class="drawer-section-title">3. Production Datastores</div>
+    <a class="drawer-link" href="/docs/file-server-england">🗄️ file.server.england</a>
+    <a class="drawer-link" href="/docs/database-server-england">🛢️ database.server.england</a>
+
+    <div class="drawer-section-title">System Status</div>
+    <a class="drawer-link" href="/docs/whyoffline" style="color: #ffaa00 !important;">⚠️ Dynamic Power Notice</a>
+    
+    <div class="drawer-section-title">Where's ETVaultGuard?</div>
+    <a class="drawer-link" href="/docs/ETVaultGuard" style="color: #ffaa00 !important;">What happened to my file encryption software.</a>
+    
+    <div class="drawer-section-title"> Other</div>
+    <a class="drawer-link" href="/Home/Print" style="color:#ffaa00 !important;">Watch my 3D Printer</a>
+</nav>
+
+<main>
+    @RenderBody()
+</main>
+
+<footer class="footer mt-auto">
+    <div class="container text-center py-3" style="color: #777;">
+        <p>&copy; 2026 England Technologies – All Rights Reserved</p>
+    </div>
+</footer>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+<script src="~/js/metrics-client.js" asp-append-version="true"></script>
+
+<!-- Open/Close Functionality & Active Link Highlighting -->
+<script>
+    $(document).ready(function () {
+        const $toggleBtn = $('#menuToggleBtn');
+        const $closeBtn = $('#menuCloseBtn');
+        const $drawer = $('#sideNavDrawer');
+        const $overlay = $('#drawerOverlay');
+
+        function openDrawer() {
+            $drawer.addClass('open');
+            $overlay.addClass('show');
+        }
+
+        function closeDrawer() {
+            $drawer.removeClass('open');
+            $overlay.removeClass('show');
+        }
+
+        // Bind click execution
+        $toggleBtn.on('click', openDrawer);
+        $closeBtn.on('click', closeDrawer);
+        $overlay.on('click', closeDrawer);
+
+        // Escape key binds to close drawer
+        $(document).on('keydown', function (e) {
+            if (e.key === 'Escape') {
+                closeDrawer();
+            }
+        });
+
+        // Set active class indicators matching current route window path
+        const currentPath = window.location.pathname.toLowerCase().replace(/\/$/, "");
+        $('.drawer-link').each(function () {
+            const linkHref = $(this).attr('href').toLowerCase().replace(/\/$/, "");
+            if (currentPath === linkHref || (linkHref === "/docs" && currentPath === "")) {
+                $(this).addClass('active-page');
+            }
+        });
+    });
+</script>
+
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

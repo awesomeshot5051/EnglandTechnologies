@@ -1,0 +1,234 @@
+@{
+    ViewData["Title"] = "file.server.england";
+}
+
+<div class="hero" style="min-height: auto; padding: 3rem 1rem;">
+    <div class="hero-content" style="max-width: 1400px; width: 100%;">
+        <nav aria-label="breadcrumb" class="mb-3 w-100">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/" style="color: #00bfff; text-decoration: none;">Portfolio</a></li>
+                <li class="breadcrumb-item active" style="color: #777;" aria-current="page">File Server</li>
+            </ol>
+        </nav>
+
+        <h1 class="hero-title">Server Documentation: file.server.england</h1>
+
+        <div class="verse-box text-start" style="max-width: 100%;">
+            <div class="row g-4">
+                <div class="col-xl-8" style="color: #ddd;">
+                    
+                    <h2 style="color: #00bfff;">System Overview</h2>
+                    <ul>
+                        <li><strong>Hostname:</strong> file.server.england</li>
+                        <li><strong>IP Address:</strong> 192.168.0.139</li>
+                        <li><strong>Primary Role:</strong> Centralized Storage (NAS), Block Storage (iSCSI), and Web-based File Management.</li>
+                    </ul>
+
+                    <hr style="border-color: rgba(0, 191, 255, 0.3); margin: 2rem 0;" />
+
+                    <h2 style="color: #00bfff;">Storage Architecture</h2>
+                    <p>The server manages a hybrid storage array totaling approximately 6.5 TB of raw capacity.</p>
+                    <ul>
+                        <li><strong>High-Performance Tier:</strong> 2.5 TB SSD storage, managed via ZFS for data integrity and snapshot capabilities.</li>
+                        <li><strong>Mass Storage Tier:</strong> 4 TB External HDD storage.</li>
+                        <li><strong>Pool Management:</strong> Utilizes ZFS (<code>zfs-zed.service</code>) for the primary "storage" pool.</li>
+                        <li><strong>Protocols:</strong>
+                            <ul>
+                                <li><strong>Samba (SMB/CIFS):</strong> Managed by <code>smbd</code> and <code>nmbd</code> for cross-platform file sharing.</li>
+                                <li><strong>iSCSI:</strong> Managed by <code>tgt.service</code> on Port 3260 for block-level storage presentation.</li>
+                                <li><strong>Web/HTTPS:</strong> Caddy acts as a reverse proxy/web server, with File Browser providing a GUI (Ports 80, 8080, 8081).</li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <hr style="border-color: rgba(0, 191, 255, 0.3); margin: 2rem 0;" />
+
+                    <h2 style="color: #00bfff;">Automation and Backup Logic</h2>
+                    <p>This server employs a specialized backup suite in <code>/usr/local/bin</code> to manage data redundancy while navigating the system's aggressive power-saving (suspend) schedule.</p>
+                    
+                    <h4 style="color: #00bfff;">Systemd Timers & Services</h4>
+                    <p>The backup lifecycle is orchestrated by systemd rather than standard cron, allowing for better logging and dependency management.</p>
+                    <table class="table table-dark table-striped mt-2">
+                        <thead>
+                            <tr style="color: #00bfff;"><th>Timer</th><th>Service</th><th>Schedule</th><th>Function</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>fileserver-backup.timer</strong></td><td><code>fileserver-backup.service</code></td><td>23:00 Daily</td><td>Triggers the primary file server backup logic.</td></tr>
+                            <tr><td><strong>dpkg-db-backup.timer</strong></td><td><code>dpkg-db-backup.service</code></td><td>00:00 Daily</td><td>Backs up the dpkg database for system recovery.</td></tr>
+                        </tbody>
+                    </table>
+
+                    <h4 style="color: #00bfff;" class="mt-4">Backup Script Orchestration</h4>
+                    <ul>
+                        <li><strong>backup_runner:</strong> The primary engine. It calculates the day of the year to maintain a 3-day interval. It creates a ZFS snapshot, disables system suspension, and pipes a compressed stream (<code>zstd -19</code>) to a mounted Samba share at <code>/mnt/backup_data</code>.</li>
+                        <li><strong>backup_watchdog:</strong> Monitors long-running <code>zfs send</code> processes. If a backup exceeds 30 minutes, it automatically extends the <code>disablesuspend</code> lock to prevent data corruption.</li>
+                        <li><strong>backup_wrapper:</strong> Uses <code>systemd-inhibit</code> to provide a kernel-level lock against sleep states while <code>backup_fileserver</code> (the legacy tar-based backup) is active.</li>
+                        <li><strong>compareDir:</strong> A custom utility for verifying file integrity, metadata, and SHA-256 hashes between source and destination directories.</li>
+                    </ul>
+
+                    <h4 style="color: #00bfff;" class="mt-4">Maintenance Schedule (Cron)</h4>
+                    <ul>
+                        <li><strong>Nightly Suspend:</strong> (00:01) <code>nightly_suspend.sh</code>.</li>
+                        <li><strong>Morning Maintenance:</strong> (05:08) <code>morning_maintenance.sh</code>. Includes network connectivity checks and automated package audits via <code>daily_apt_check.sh</code>.</li>
+                    </ul>
+
+                    <hr style="border-color: rgba(0, 191, 255, 0.3); margin: 2rem 0;" />
+
+                    <h2 style="color: #00bfff;">Network Configuration and Listening Ports</h2>
+                    <ul>
+                        <li><strong>Port 445 / 139 (TCP):</strong> Samba / NetBIOS File Sharing.</li>
+                        <li><strong>Port 3260 (TCP):</strong> iSCSI Target Daemon (<code>tgt</code>).</li>
+                        <li><strong>Port 80 (TCP):</strong> HTTP (Caddy).</li>
+                        <li><strong>Port 8080 / 8081 (TCP):</strong> File Browser Web Interface.</li>
+                        <li><strong>Port 22 (TCP):</strong> SSH Administrative Access.</li>
+                    </ul>
+
+                    <hr style="border-color: rgba(0, 191, 255, 0.3); margin: 2rem 0;" />
+
+                    <h2 style="color: #00bfff;">Critical Configuration Paths</h2>
+                    <p>The following paths are tracked for structural reference. Actual data is excluded via <code>.gitignore</code>.</p>
+                    <ul>
+                        <li><strong>ZFS Pool Configuration:</strong> Managed via <code>zpool</code> and <code>zfs</code> utilities.</li>
+                        <li><strong>Samba Configuration:</strong> <code>/etc/samba/smb.conf</code></li>
+                        <li><strong>systemd Units:</strong> <code>/etc/systemd/system/fileserver-backup.*</code></li>
+                        <li><strong>Caddyfile:</strong> Configuration for web routing and reverse proxying.</li>
+                    </ul>
+
+                </div>
+
+                <div class="col-xl-4">
+                    <h3 style="color: #00bfff; border-bottom: 1px solid rgba(0, 191, 255, 0.3); padding-bottom: 0.5rem;">Live Status</h3>
+                    <div class="metrics-card mb-3">
+                        <div class="metric-row">
+                            <span class="metric-label">Status</span>
+                            <span><span id="file-server-status" class="status-dot offline"></span></span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">CPU</span>
+                            <span class="metric-value"><span id="file-server-cpuUsage">--</span></span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">CPU Temp</span>
+                            <span class="metric-value"><span id="file-server-cpuTemp">--</span></span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">RAM</span>
+                            <span class="metric-value"><span id="file-server-ramPct">--</span> (<span id="file-server-ramDetail">--</span>)</span>
+                        </div>
+                        <div id="file-server-disks-container"></div>
+                        <div class="metric-row">
+                            <span class="metric-label">Uptime</span>
+                            <span class="metric-value"><span id="file-server-uptime">--</span></span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">Last Seen</span>
+                            <span class="metric-value"><span id="file-server-lastSeen">--</span></span>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #00bfff; border-bottom: 1px solid rgba(0, 191, 255, 0.3); padding-bottom: 0.5rem;">Raw Hardware Specifications</h3>
+                    <pre style="background: rgba(0,0,0,0.6); color: #00bfff; padding: 1rem; border-radius: 8px; border: 1px solid rgba(0, 191, 255, 0.2); font-family: 'Cascadia Code', monospace; font-size: 0.85rem; white-space: pre-wrap; overflow-x: auto; max-height: 800px; overflow-y: auto;">
+System:
+  Kernel: <span style="background-color: #000; color: #000; border: 1px solid #00bfff;" title="redacted" aria-label="redacted">redacted</span> arch
+  x86_64 bits: 64
+  compiler:
+  gcc v: 13.3.0
+  Console: pty pts/1
+    Distro: Ubuntu 24.04.4 LTS (Noble Numbat)
+Machine:
+  Type: Laptop System: Hewlett-Packard product: HP ENVY dv7 Notebook PC v: 0883120014305910000620120
+  serial: <span style="background-color: #000; color: #000; border: 1px solid #00bfff;" title="redacted" aria-label="redacted">redacted</span>
+  Mobo: Hewlett-Packard model: 1833 v: 55.24
+  serial: <span style="background-color: #000; color: #000; border: 1px solid #00bfff;" title="redacted" aria-label="redacted">redacted</span>
+  UEFI: Insyde v: <span style="background-color: #000; color: #000; border: 1px solid #00bfff;" title="redacted" aria-label="redacted">redacted</span>
+    date: <span style="background-color: #000; color: #000; border: 1px solid #00bfff;" title="redacted" aria-label="redacted">redacted</span>
+Battery:
+  ID-1: BAT0 charge: N/A condition: N/A volts: 11.1 min: N/A
+    model: Hewlett-Packard Primary status: not charging
+CPU:
+  Info: quad core model: AMD A10-4600M APU with Radeon HD Graphics bits: 64 type: MT MCP arch: Piledriver rev: 1
+  cache:
+    L1: 192 KiB
+    L2: 4 MiB
+  Speed (MHz): avg: 1400 min/max: 1400/2300 boost: enabled cores: 1: 1400 2: 1400 3: 1400 4: 1400 bogomips: 18366
+  Flags: avx ht lm nx pae sse sse2 sse3 sse4_1 sse4_2 sse4a ssse3
+Graphics:
+  Device-1: AMD Trinity [Radeon HD 7660G] vendor: Hewlett-Packard driver: radeon v: kernel arch: TeraScale-3 bus-ID: 00:01.0
+  Device-2: Realtek HP Truevision HD driver: uvcvideo type: USB bus-ID: 2-4:4
+  Display: server: No display server data found. Headless machine? tty: 235x60
+  API: EGL v: 1.5 drivers: r600,swrast platforms: active: gbm,surfaceless,device inactive: wayland,x11
+  API: OpenGL v: 4.5 vendor: mesa v: 25.2.8-0ubuntu0.24.04.1 note: console (EGL sourced)
+    renderer: AMD ARUBA (DRM 2.50.0 / 6.8.0-110-generic LLVM 20.1.2), llvmpipe (LLVM 20.1.2 256 bits)
+Audio:
+  Device-1: AMD Trinity HDMI Audio vendor: Hewlett-Packard driver: snd_hda_intel v: kernel bus-ID: 00:01.1
+  Device-2: AMD FCH Azalia vendor: Hewlett-Packard driver: snd_hda_intel v: kernel bus-ID: 00:14.2
+  API: ALSA v: k6.8.0-110-generic status: kernel-api
+Network:
+  Device-1: Qualcomm Atheros AR9485 Wireless Network Adapter vendor: Hewlett-Packard AR9485/HB125 802.11bgn 1x1 Wi-Fi driver: ath9k v: kernel bus-ID: 02:00.0
+  IF: wlo1 state: down
+  mac: <span style="background-color: #000; color: #000; border: 1px solid #00bfff;" title="redacted" aria-label="redacted">redacted</span>
+  Device-2: Realtek RTL8111/8168/8211/8411 PCI Express Gigabit Ethernet vendor: Hewlett-Packard RTL8111/8168/8411 driver: r8169 v: kernel port: 2000 bus-ID: 04:00.0
+  IF: eno1 state: up speed: 1000 Mbps duplex: full
+  mac: <span style="background-color: #000; color: #000; border: 1px solid #00bfff;" title="redacted" aria-label="redacted">redacted</span>
+RAID:
+  Device-1: storage type: zfs status: ONLINE level: linear
+  raw:
+    size: 2.63 TiB
+    free: 2.21 TiB
+  zfs-fs:
+    size: 2.55 TiB
+    free: 2.13 TiB
+  Components: Online: 1: sda 2: sdb4 3: sdc1
+Drives:
+  Local Storage:
+  total:
+  raw: 6.39 TiB
+  usable: 6.3 TiB
+  lvm-free: 10 GiB
+  used: 394.16 GiB (6.1%)
+  ID-1: /dev/sda model: 1InsigniaNS-PACS2B25\x28-C\x29
+    size: 953.87 GiB type: USB
+  ID-2: /dev/sdb vendor: Samsung model: ST1000LM024 HN-M101MBB
+    size: 931.51 GiB
+  ID-3: /dev/sdc vendor: Western Digital model: WD10SPZX-60Z10T1
+    size: 931.51 GiB
+  ID-4: /dev/sdd vendor: Western Digital model: WD40NDZW-11BCSS0
+    size: 3.64 TiB type: USB
+Partition:
+  ID-1: /
+  size: 97.87 GiB
+  used: 11.23 GiB (11.5%)
+  fs: ext4
+  dev: /dev/dm-0
+    mapped: ubuntu--vg-ubuntu--lv
+  ID-2: /boot
+  size: 1.9 GiB
+  used: 200.5 MiB (10.3%)
+  fs: ext4
+  dev: /dev/sdb2
+  ID-3: /boot/efi
+  size: 1.05 GiB
+  used: 6.1 MiB (0.6%)
+  fs: vfat
+  dev: /dev/sdb1
+Swap:
+  Alert: No swap data was found.
+Sensors:
+  System Temperatures: cpu: 51.4 C mobo: N/A gpu: radeon temp: 49.0 C
+  Fan Speeds (rpm): N/A
+Info:
+  Memory:
+  total: 8 GiB
+  note: est. available: 7.23 GiB
+  used: 2.23 GiB (30.9%)
+  Processes: 235
+  Uptime: 13d 5h 34m
+  Init: systemd target: graphical (5)
+  Packages: 957
+  Compilers: gcc: 13.3.0
+  Shell: Sudo v: <span style="background-color: #000; color: #000; border: 1px solid #00bfff;" title="redacted" aria-label="redacted">redacted</span></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

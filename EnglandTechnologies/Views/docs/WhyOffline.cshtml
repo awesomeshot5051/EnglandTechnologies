@@ -1,0 +1,36 @@
+@{
+    ViewData["Title"] = "Why is the Database Offline?";
+}
+
+<div class="hero" style="min-height: auto; padding: 3rem 1rem;">
+    <div class="hero-content" style="max-width: 1400px; width: 100%;">
+        <nav aria-label="breadcrumb" class="mb-3 w-100">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/" style="color: #00bfff; text-decoration: none;">Portfolio</a></li>
+                <li class="breadcrumb-item active" style="color: #777;" aria-current="page">Database Status Logic</li>
+            </ol>
+        </nav>
+
+        <h1 class="hero-title">Infrastructure Notice: Dynamic Power Management</h1>
+
+        <div class="verse-box text-start" style="max-width: 100%; color: #ddd;">
+            <h2 style="color: #00bfff;">Operational Cost & Power Optimization</h2>
+            <p>
+                The production database server runs on enterprise hardware (**HP ProLiant DL160 G6**). Featuring dual Intel Xeon E5606 CPUs and multi-tier server architecture, its idle footprint is significantly high-power. 
+            </p>
+            <p>
+                To save on utility costs and overhead power consumption, a dynamic state allocation model has been deployed. The node automatically spins up on-demand when critical workflows require interaction, and drops into a full power-off state when idle.
+            </p>
+
+            <hr style="border-color: rgba(0, 191, 255, 0.3); margin: 2rem 0;" />
+
+            <h2 style="color: #00bfff;">Current Software Lifecycle Pause</h2>
+            <p>
+                The proprietary cross-platform encryption software suite (**ETVaultGuard**) is currently undergoing a major structural internal logic rewrite to implement hardware-level cryptography utilizing the **Trusted Platform Module (TPM)** (Read more about that <a href="ETVaultGuard">here</a>).
+            </p>
+            <blockquote>
+                <strong>Note:</strong> Because the cryptographic database backend is not processing live production traffic during this refactoring phase, the host stays powered down during normal operational windows. The monitoring daemon scripts responsible for pushing JSON telemetry to this portfolio portal are temporarily suspended on this node to avoid logging false-positive connection alerts.
+            </blockquote>
+        </div>
+    </div>
+</div>

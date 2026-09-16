@@ -1,0 +1,253 @@
+@{
+    ViewData["Title"] = "cisco.firewall.england";
+}
+
+<div class="hero" style="min-height: auto; padding: 3rem 1rem;">
+    <div class="hero-content" style="max-width: 1400px; width: 100%;">
+        <nav aria-label="breadcrumb" class="mb-3 w-100">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/" style="color: #00bfff; text-decoration: none;">Portfolio</a></li>
+                <li class="breadcrumb-item active" style="color: #777;" aria-current="page">Cisco Firewall</li>
+            </ol>
+        </nav>
+
+        <h1 class="hero-title">Server Documentation: cisco.firewall.england</h1>
+
+        <div class="verse-box text-start" style="max-width: 100%;">
+            <div class="row g-4">
+                <div class="col-xl-8" style="color: #ddd;">
+                    
+                    <h2 style="color: #00bfff;">System Overview</h2>
+                    <ul>
+                        <li><strong>Hostname:</strong> cisco.firewall.england</li>
+                        <li><strong>IP Address:</strong> 192.168.0.1 (Internal Gateway)</li>
+                        <li><strong>OS:</strong> FreeBSD 14.3-RELEASE-p7 (OPNsense 25.7 Stable)</li>
+                        <li><strong>Architecture:</strong> amd64</li>
+                        <li><strong>Primary Role:</strong> Stateful Firewall, NAT Gateway, and Perimeter Security.</li>
+                    </ul>
+
+                    <hr style="border-color: rgba(0, 191, 255, 0.3); margin: 2rem 0;" />
+
+                    <h2 style="color: #00bfff;">Network Interfaces</h2>
+                    <ul>
+                        <li><strong>em0 (WAN):</strong> 192.168.1.222 (Upstream Gateway: 192.168.1.254)</li>
+                        <li><strong>em1 (LAN):</strong> 192.168.0.1 (Local Network: 192.168.0.0/24)</li>
+                    </ul>
+
+                    <hr style="border-color: rgba(0, 191, 255, 0.3); margin: 2rem 0;" />
+
+                    <h2 style="color: #00bfff;">Core Security Services (BSD rc.d)</h2>
+                    <p>The following critical daemons are active, providing the backbone of the OPNsense infrastructure:</p>
+                    <table class="table table-dark table-striped mt-2">
+                        <thead>
+                            <tr style="color: #00bfff;"><th>Service</th><th>Component</th><th>Description</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>pf</strong></td><td>Packet Filter</td><td>The core firewall engine managing stateful inspection.</td></tr>
+                            <tr><td><strong>unbound</strong></td><td>DNS Resolver</td><td>Hardened recursive DNS server for the gateway.</td></tr>
+                            <tr><td><strong>dnsmasq</strong></td><td>DNS/DHCP Forwarder</td><td>Lightweight DNS forwarder providing local resolution support.</td></tr>
+                            <tr><td><strong>suricata</strong></td><td>IDS/IPS</td><td>High-performance Network IDS, IPS, and Security Monitoring.</td></tr>
+                            <tr><td><strong>syslog-ng</strong></td><td>Logging</td><td>Enhanced system logging daemon for advanced audit trails.</td></tr>
+                            <tr><td><strong>sshd</strong></td><td>OpenSSH</td><td>Secure remote administration on Port 22.</td></tr>
+                            <tr><td><strong>lighttpd</strong></td><td>Web GUI</td><td>Serves the OPNsense administrative web interface (Ports 80/443).</td></tr>
+                        </tbody>
+                    </table>
+
+                    <hr style="border-color: rgba(0, 191, 255, 0.3); margin: 2rem 0;" />
+
+                    <h2 style="color: #00bfff;">Port Forwarding & NAT Configuration</h2>
+                    <p>The gateway handles several critical redirections to internal lab servers:</p>
+                    <h4 style="color: #00bfff;">Ingress Port Mapping (RDR)</h4>
+                    <table class="table table-dark table-striped mt-2">
+                        <thead>
+                            <tr style="color: #00bfff;"><th>External Port</th><th>Protocol</th><th>Internal Target</th><th>Target Port</th><th>Service</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>1194</strong></td><td>TCP/UDP</td><td>192.168.0.140</td><td>1194</td><td>OpenVPN Tunnel</td></tr>
+                            <tr><td><strong>12222</strong></td><td>TCP/UDP</td><td>192.168.0.140</td><td>12222</td><td>WolAuthServer</td></tr>
+                            <tr><td><strong>46317</strong></td><td>TCP/UDP</td><td>192.168.0.143</td><td>46317</td><td>DB Server (Encrypted Data)</td></tr>
+                        </tbody>
+                    </table>
+
+                    <h4 style="color: #00bfff;" class="mt-4">Outbound NAT</h4>
+                    <ul>
+                        <li><strong>Standard Masquerade:</strong> All internal traffic from <code>192.168.0.0/24</code> is NAT'ed through <code>em0</code>.</li>
+                        <li><strong>Static-Port NAT:</strong> Specifically configured for <code>isakmp</code> (Port 500) to ensure VPN/IPsec compatibility.</li>
+                    </ul>
+
+                    <hr style="border-color: rgba(0, 191, 255, 0.3); margin: 2rem 0;" />
+
+                    <h2 style="color: #00bfff;">Security Policy & Rulesets (pf)</h2>
+                    <ul>
+                        <li><strong>Anti-Spoofing:</strong> Strict <code>block</code> rules prevent traffic from unauthorized internal IPs on the WAN interface.</li>
+                        <li><strong>Automated Lockouts:</strong>
+                            <ul>
+                                <li><code>&lt;sshlockout&gt;</code> table: Automatically drops traffic to SSH/HTTPS ports from repeat offenders.</li>
+                                <li><code>&lt;virusprot&gt;</code> table: Drops all traffic from known malicious sources.</li>
+                                <li><code>&lt;bogons&gt;</code> table: Blocks unassigned and private IP space on the WAN.</li>
+                            </ul>
+                        </li>
+                        <li><strong>ICMP Policy:</strong> Explicitly allows essential IPv6-ICMP types (Neighbor Discovery, Router Advertisement) for network health.</li>
+                    </ul>
+
+                    <hr style="border-color: rgba(0, 191, 255, 0.3); margin: 2rem 0;" />
+
+                    <h2 style="color: #00bfff;">Maintenance & Monitoring</h2>
+                    <ul>
+                        <li><strong>Log Management:</strong> <code>syslog-ng</code> and <code>newsyslog</code> manage rotation and archiving.</li>
+                        <li><strong>Traffic Graphing:</strong> <code>rrdcached</code> maintains Round Robin Databases for historical performance analysis.</li>
+                        <li><strong>Health Checks:</strong> A custom <code>ping_hosts.sh</code> script runs every 4 minutes via cron to verify the availability of critical lab nodes.</li>
+                    </ul>
+
+                    <hr style="border-color: rgba(0, 191, 255, 0.3); margin: 2rem 0;" />
+
+                    <h2 style="color: #00bfff;">Critical Diagnostic Commands</h2>
+                    <ul>
+                        <li><strong>Verify Listening Sockets:</strong> <code>sockstat -4 -l</code></li>
+                        <li><strong>Inspect Filter Rules:</strong> <code>pfctl -sr</code></li>
+                        <li><strong>Inspect NAT Rules:</strong> <code>pfctl -sn</code></li>
+                        <li><strong>Check Service Status:</strong> <code>service -e</code></li>
+                    </ul>
+
+                </div>
+
+                <div class="col-xl-4">
+                    <h3 style="color: #00bfff; border-bottom: 1px solid rgba(0, 191, 255, 0.3); padding-bottom: 0.5rem;">Live Status</h3>
+                    <div class="metrics-card mb-3">
+                        <div class="metric-row">
+                            <span class="metric-label">Status</span>
+                            <span><span id="cisco-firewall-status" class="status-dot offline"></span></span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">CPU</span>
+                            <span class="metric-value"><span id="cisco-firewall-cpuUsage">--</span></span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">CPU Temp</span>
+                            <span class="metric-value"><span id="cisco-firewall-cpuTemp">--</span></span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">RAM</span>
+                            <span class="metric-value"><span id="cisco-firewall-ramPct">--</span> (<span id="cisco-firewall-ramDetail">--</span>)</span>
+                        </div>
+                        <div id="cisco-firewall-disks-container"></div>
+                        <div class="metric-row">
+                            <span class="metric-label">Uptime</span>
+                            <span class="metric-value"><span id="cisco-firewall-uptime">--</span></span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">Last Seen</span>
+                            <span class="metric-value"><span id="cisco-firewall-lastSeen">--</span></span>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #00bfff; border-bottom: 1px solid rgba(0, 191, 255, 0.3); padding-bottom: 0.5rem;">Raw Hardware Specifications</h3>
+                    <pre style="background: rgba(0,0,0,0.6); color: #00bfff; padding: 1rem; border-radius: 8px; border: 1px solid rgba(0, 191, 255, 0.2); font-family: 'Cascadia Code', monospace; font-size: 0.85rem; white-space: pre-wrap; overflow-x: auto; max-height: 800px; overflow-y: auto;">
+System:
+  Kernel: <span style="background-color: #000; color: #000; border: 1px solid #00bfff;" title="redacted" aria-label="redacted">redacted</span> arch
+  amd64 bits: 64
+  compiler:
+  clang v: 19.1.7
+  Console: pty pts/0
+    OS: FreeBSD <span style="background-color: #000; color: #000; border: 1px solid #00bfff;" title="redacted" aria-label="redacted">redacted</span>
+Machine:
+  Type: Firewall System: Cisco product: SALEEN
+  Mobo: Cisco model: ASA5515
+  BIOS: American Megatrends: <span style="background-color: #000; color: #000; border: 1px solid #00bfff;" title="redacted" aria-label="redacted">redacted</span>
+    date: <span style="background-color: #000; color: #000; border: 1px solid #00bfff;" title="redacted" aria-label="redacted">redacted</span>
+CPU:
+  Info: quad core model: Intel Core i3 540 bits: 64 type: 
+  cache: 
+    L1: 32 KiB
+    L2: 256 KiB L3: 4 MiB note: check
+  Speed (MHz): 3059 min/max: N/A cores: No OS support for core speeds.
+Graphics:
+    None
+Audio:
+  Message: No device data found.
+Network:
+  Device-1: Intel 82574L Gigabit Network driver
+  IF: em0 state: active speed: 1000baseT duplex
+  Device-2: Intel 82574L Gigabit Network driver
+  IF: em1 state: active speed: 1000baseT duplex
+  Device-3: Intel 82574L Gigabit Network driver
+  IF: em2 state
+  Device-4: Intel 82574L Gigabit Network driver
+  IF: em3 state
+  Device-5: Intel 82574L Gigabit Network driver
+  IF: em4 state
+  Device-6: Intel 82574L Gigabit Network driver
+  IF: em5 state
+  Device-7: Intel 82574L Gigabit Network driver
+  IF: em6 state
+RAID:
+  Device-1: zroot type: zfs status: ONLINE
+  raw:
+    size: 110 GiB 
+    free: 109 GiB 
+  zfs-fs:
+    size: 106.59 GiB 
+    free: 105.23 GiB
+  Components: Online: 1:
+Drives:
+  Local Storage: 
+  raw: 126.93 GiB 
+  usable: 233.52 GiB 
+  used: 1.36 GiB (0.6%)
+  ID-1: /dev/ada0 vendor: Micron model 
+    size: 119.24 
+    GiB scheme: GPT
+  ID-2: /dev/da0 model
+    USB DISK MODULE PMAP 
+    size: 7.69 GiB 
+    scheme: MBR
+Partition:
+ID-1: / 
+  size: 106.5 GiB 
+  used: 1.28 GiB (1.2%) 
+  fs: zfs 
+  logical: zroot/ROOT/default
+ID-2: /boot/efi 
+  size: 259.9 MiB 
+  used: 1.3 MiB (0.5%) 
+  fs: msdosfs 
+  dev: /dev/efiboot0
+ID-3: /home 
+  size: 105.23 GiB 
+  used: 96 KiB (0.0%) 
+  fs: zfs 
+  logical: zroot/home
+ID-4: /tmp 
+  size: 105.23 GiB 
+  used: 652 KiB (0.0%) 
+  fs: zfs 
+  logical: zroot/tmp
+ID-5: /var/log 
+  size: 105.3 GiB 
+  used: 79.5 MiB (0.1%) 
+  fs: zfs 
+  logical: zroot/var/log
+ID-6: /var/tmp 
+  size: 105.23 GiB 
+  used: 96 KiB (0.0%) 
+  fs: zfs 
+  logical: zroot/var/tmp
+Swap:
+  Alert: No swap data was found.
+Sensors:
+  Src: sysctl Message: No sensor data found. Are data sources present?
+Info:
+  Processes: 86 
+  Uptime: 7h 53m 
+  Memory: total: 8 GiB 
+  available: 7.95 GiB 
+  used: 1.38 GiB (17.3%)
+  Init: init (BSD) 
+  Compilers: clang: 19.1.7 
+  Packages: 6 
+  Shell: csh v: <span style="background-color: #000; color: #000; border: 1px solid #00bfff;" title="redacted" aria-label="redacted">redacted</span></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

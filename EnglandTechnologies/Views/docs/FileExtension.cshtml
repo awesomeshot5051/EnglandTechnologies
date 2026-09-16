@@ -1,0 +1,212 @@
+@{
+    ViewData["Title"] = "file.extension.england";
+}
+
+<div class="hero" style="min-height: auto; padding: 3rem 1rem;">
+    <div class="hero-content" style="max-width: 1400px; width: 100%;">
+        <nav aria-label="breadcrumb" class="mb-3 w-100">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/" style="color: #00bfff; text-decoration: none;">Portfolio</a></li>
+                <li class="breadcrumb-item active" style="color: #777;" aria-current="page">File Extension</li>
+            </ol>
+        </nav>
+
+        <h1 class="hero-title">Server Documentation: file.extension.england</h1>
+
+        <div class="verse-box text-start" style="max-width: 100%;">
+            <div class="row g-4">
+                <div class="col-xl-8" style="color: #ddd;">
+                    
+                    <h2 style="color: #00bfff;">System Overview</h2>
+                    <ul>
+                        <li><strong>Hostname:</strong> file.extension.england</li>
+                        <li><strong>Primary IP:</strong> 192.168.0.110</li>
+                        <li><strong>Virtual IP (vIP):</strong> 192.168.0.111</li>
+                        <li><strong>Primary Role:</strong> High-Availability Network Services (Secondary DNS/Pi-hole) and Backup Storage Target.</li>
+                    </ul>
+
+                    <hr style="border-color: rgba(0, 191, 255, 0.3); margin: 2rem 0;" />
+
+                    <h2 style="color: #00bfff;">Network & Security Services</h2>
+                    <p>This server provides redundancy for the core network while introducing a security layer for ad-blocking and tracking prevention.</p>
+                    <table class="table table-dark table-striped mt-2">
+                        <thead>
+                            <tr style="color: #00bfff;"><th>Service</th><th>Systemd Unit</th><th>Description</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>Secondary DNS</strong></td><td><code>named.service</code></td><td>BIND9 instance acting as the secondary authority for the local domain.</td></tr>
+                            <tr><td><strong>Pi-hole FTL</strong></td><td><code>pihole-FTL.service</code></td><td>DNS-level ad-blocking and network-wide privacy protection.</td></tr>
+                            <tr><td><strong>iSCSI Initiator</strong></td><td><code>iscsid.service</code></td><td>Manages connections to remote iSCSI targets.</td></tr>
+                        </tbody>
+                    </table>
+
+                    <hr style="border-color: rgba(0, 191, 255, 0.3); margin: 2rem 0;" />
+
+                    <h2 style="color: #00bfff;">Storage & File Management</h2>
+                    <p>Acts as the secondary storage node, housing backups for the primary file server data.</p>
+                    <ul>
+                        <li><strong>Samba (SMB/CIFS):</strong> <code>smbd.service</code> and <code>nmbd.service</code> facilitate local network access to backup volumes.</li>
+                        <li><strong>File Browser:</strong> <code>filebrowser.service</code> provides a web-based interface for managing backup archives (Port 8080).</li>
+                        <li><strong>Hardware Optimization:</strong> Uses <code>ethtool</code> via crontab at reboot to disable Energy Efficient Ethernet (EEE) on the <code>eno1</code> interface, ensuring consistent network performance and preventing link drops.</li>
+                    </ul>
+
+                    <hr style="border-color: rgba(0, 191, 255, 0.3); margin: 2rem 0;" />
+
+                    <h2 style="color: #00bfff;">Automation and Power Management</h2>
+                    <p>The server follows the global power-saving policy while maintaining specific overrides for reliability.</p>
+                    <h4 style="color: #00bfff;">Systemd Power Logic</h4>
+                    <ul>
+                        <li><strong>nosleep.service:</strong> A specialized service designed to prevent the system from entering sleep states during critical operations.</li>
+                    </ul>
+                    <h4 style="color: #00bfff;">Scheduled Tasks (Crontab)</h4>
+                    <ul>
+                        <li><strong>Nightly Suspend:</strong> (00:00) <code>nightly_suspend.sh</code>.</li>
+                        <li><strong>Hardware Tuning:</strong> (@@reboot) Disables EEE on the primary NIC to ensure stability.</li>
+                        <li><strong>Morning Maintenance:</strong> (08:05) <code>morning_maintaince.sh</code>. Runs connectivity checks and package audits.</li>
+                        <li><strong>Network Sync:</strong> (10:08) <code>applyNetplan</code>. Ensures network configuration consistency post-wake.</li>
+                    </ul>
+
+                    <hr style="border-color: rgba(0, 191, 255, 0.3); margin: 2rem 0;" />
+
+                    <h2 style="color: #00bfff;">Network Configuration and Listening Ports</h2>
+                    <ul>
+                        <li><strong>Port 53 (TCP/UDP):</strong> DNS / Pi-hole Filtering.</li>
+                        <li><strong>Port 80 / 443 (TCP):</strong> Pi-hole Admin Console and Web Routing.</li>
+                        <li><strong>Port 8080 (TCP):</strong> File Browser interface.</li>
+                        <li><strong>Port 139 / 445 (TCP):</strong> Samba / NetBIOS backup shares.</li>
+                        <li><strong>Port 22 (TCP):</strong> SSH Administrative Access.</li>
+                        <li><strong>Port 953 (TCP):</strong> BIND Remote Control Channel (RNDC).</li>
+                    </ul>
+
+                    <hr style="border-color: rgba(0, 191, 255, 0.3); margin: 2rem 0;" />
+
+                    <h2 style="color: #00bfff;">Configuration Paths (Sensitive Data)</h2>
+                    <p>The following directories contain critical configurations. Files within these paths are excluded from version control via <code>.gitignore</code>.</p>
+                    <ul>
+                        <li><strong>Pi-hole Configurations:</strong> <code>/etc/pihole/</code></li>
+                        <li><strong>BIND9 (Secondary) Configs:</strong> <code>/etc/bind/</code></li>
+                        <li><strong>Samba Configuration:</strong> <code>/etc/samba/smb.conf</code></li>
+                        <li><strong>Custom Maintenance Scripts:</strong> <code>/usr/local/bin/</code></li>
+                    </ul>
+
+                </div>
+
+                <div class="col-xl-4">
+                    <h3 style="color: #00bfff; border-bottom: 1px solid rgba(0, 191, 255, 0.3); padding-bottom: 0.5rem;">Live Status</h3>
+                    <div class="metrics-card mb-3">
+                        <div class="metric-row">
+                            <span class="metric-label">Status</span>
+                            <span><span id="file-extension-status" class="status-dot offline"></span></span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">CPU</span>
+                            <span class="metric-value"><span id="file-extension-cpuUsage">--</span></span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">CPU Temp</span>
+                            <span class="metric-value"><span id="file-extension-cpuTemp">--</span></span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">RAM</span>
+                            <span class="metric-value"><span id="file-extension-ramPct">--</span> (<span id="file-extension-ramDetail">--</span>)</span>
+                        </div>
+                        <div id="file-extension-disks-container"></div>
+                        <div class="metric-row">
+                            <span class="metric-label">Uptime</span>
+                            <span class="metric-value"><span id="file-extension-uptime">--</span></span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">Last Seen</span>
+                            <span class="metric-value"><span id="file-extension-lastSeen">--</span></span>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #00bfff; border-bottom: 1px solid rgba(0, 191, 255, 0.3); padding-bottom: 0.5rem;">Raw Hardware Specifications</h3>
+                    <pre style="background: rgba(0,0,0,0.6); color: #00bfff; padding: 1rem; border-radius: 8px; border: 1px solid rgba(0, 191, 255, 0.2); font-family: 'Cascadia Code', monospace; font-size: 0.85rem; white-space: pre-wrap; overflow-x: auto; max-height: 800px; overflow-y: auto;">
+System:
+  Kernel: <span style="background-color: #000; color: #000; border: 1px solid #00bfff;" title="redacted" aria-label="redacted">redacted</span> arch
+  x86_64 bits: 64
+  compiler:
+  gcc v: 13.3.0
+  Console: pty pts/1
+    Distro: Ubuntu 24.04.4 LTS (Noble Numbat)
+Machine:
+  Type: Laptop System: Hewlett-Packard product: HP ENVY dv7 Notebook PC v: 0883120014305910000620120
+  serial: <span style="background-color: #000; color: #000; border: 1px solid #00bfff;" title="redacted" aria-label="redacted">redacted</span>
+  Mobo: Hewlett-Packard model: 1833 v: 55.24
+  serial: <span style="background-color: #000; color: #000; border: 1px solid #00bfff;" title="redacted" aria-label="redacted">redacted</span>
+  UEFI-[Legacy]: Insyde v: <span style="background-color: #000; color: #000; border: 1px solid #00bfff;" title="redacted" aria-label="redacted">redacted</span>
+    date: <span style="background-color: #000; color: #000; border: 1px solid #00bfff;" title="redacted" aria-label="redacted">redacted</span>
+Battery:
+  ID-1: BAT0
+  charge: 47.4 Wh (97.5%)
+  condition: 48.6/48.6 Wh (100.0%)
+  volts: 12.5 min: 11.1
+    model: 13-14 MO06062 status: not charging
+CPU:
+  Info: quad core model: AMD A10-4600M APU with Radeon HD Graphics bits: 64 type: MT MCP arch: Piledriver rev: 1
+  cache:
+    L1: 192 KiB
+    L2: 4 MiB
+  Speed (MHz): avg: 1500 high: 1800 min/max: 1400/2300 boost: enabled cores: 1: 1400 2: 1800 3: 1400 4: 1400 bogomips: 18365
+  Flags: avx ht lm nx pae sse sse2 sse3 sse4_1 sse4_2 sse4a ssse3
+Graphics:
+  Device-1: AMD Trinity [Radeon HD 7660G] vendor: Hewlett-Packard driver: radeon v: kernel arch: TeraScale-3 bus-ID: 00:01.0
+  Device-2: Chicony HP Truevision HD driver: uvcvideo type: USB bus-ID: 1-4:3
+  Display: server: No display server data found. Headless machine? tty: 235x60
+  API: EGL v: 1.5 drivers: r600,swrast platforms: active: gbm,surfaceless,device inactive: wayland,x11
+  API: OpenGL v: 4.5 vendor: mesa v: 25.2.8-0ubuntu0.24.04.1 note: console (EGL sourced)
+    renderer: AMD ARUBA (DRM 2.50.0 / 6.8.0-110-generic LLVM 20.1.2), llvmpipe (LLVM 20.1.2 256 bits)
+Audio:
+  Device-1: AMD Trinity HDMI Audio vendor: Hewlett-Packard driver: snd_hda_intel v: kernel bus-ID: 00:01.1
+  Device-2: AMD FCH Azalia vendor: Hewlett-Packard driver: snd_hda_intel v: kernel bus-ID: 00:14.2
+  API: ALSA v: k6.8.0-110-generic status: kernel-api
+Network:
+  Device-1: Qualcomm Atheros AR9485 Wireless Network Adapter vendor: Hewlett-Packard AR9485/HB125 802.11bgn 1x1 Wi-Fi driver: N/A bus-ID: 02:00.0
+  Device-2: Realtek RTL8111/8168/8211/8411 PCI Express Gigabit Ethernet vendor: Hewlett-Packard RTL8111/8168/8411 driver: r8169 v: kernel port: 2000 bus-ID: 04:00.0
+  IF: eno1 state: up speed: 1000 Mbps duplex: full
+  mac: <span style="background-color: #000; color: #000; border: 1px solid #00bfff;" title="redacted" aria-label="redacted">redacted</span>
+Drives:
+  Local Storage:
+  total: 1.16 TiB
+  used: 26.39 GiB (2.2%)
+  ID-1: /dev/sda model: P3-1TB
+    size: 953.87 GiB
+  ID-2: /dev/sdb vendor: Seagate model: WDC WDS250G1B0A-00H9H0
+    size: 232.89 GiB
+Partition:
+  ID-1: /
+  size: 442.37 GiB
+  used: 26.2 GiB (5.9%)
+  fs: ext4
+  dev: /dev/dm-0
+    mapped: ubuntu--vg-ubuntu--lv
+  ID-2: /boot
+  size: 1.9 GiB
+  used: 199.5 MiB (10.3%)
+  fs: ext4
+  dev: /dev/sda1
+Swap:
+  ID-1: swap-1 type: file
+  size: 4 GiB
+  used: 0 KiB (0.0%)
+  file: /swap.img
+Sensors:
+  System Temperatures: cpu: 54.2 C mobo: N/A gpu: radeon temp: 52.0 C
+  Fan Speeds (rpm): N/A
+Info:
+  Memory:
+  total: 8 GiB
+  note: est. available: 7.23 GiB
+  used: 683.7 MiB (9.2%)
+  Processes: 154
+  Uptime: 1d 16h 23m
+  Init: systemd target: multi-user (3)
+  Packages: 897
+  Compilers: N/A
+  Shell: Sudo v: <span style="background-color: #000; color: #000; border: 1px solid #00bfff;" title="redacted" aria-label="redacted">redacted</span></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
