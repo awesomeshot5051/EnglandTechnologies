@@ -1,0 +1,264 @@
+@{
+    ViewData["Title"] = "Tech Support";
+}
+
+@using EnglandTechnologies.Models
+@{ var Categories = ServiceCatalog.Categories; }
+
+<div class="hero" style="min-height: auto; padding: 4rem 1rem 3rem;">
+    <div class="hero-content" style="max-width: 1200px; width: 100%;">
+        <h1 class="hero-title">Tech support that actually gets it fixed.</h1>
+
+        <div class="verse-box text-start" style="max-width: 100%;">
+            <p style="font-size: 1.15rem; color: #ddd; margin-bottom: 1.5rem;">
+                England Technologies provides straightforward, honest help with the everyday
+                computer and network problems that slow you down. No jargon, no runaround.
+            </p>
+            <p style="font-size: 1.15rem; color: #ddd; margin-bottom: 1.5rem;">
+                <strong style="color: #00bfff;">I come to you.</strong> I meet with you however you prefer,
+                whether virtually or in person, to help with your questions and concerns.
+            </p>
+            <p style="font-size: 1rem; color: #aaa; margin-bottom: 1.5rem;">
+                Based in the Jacksonville, FL area. No travel fee within 25 miles of ZIP code 32259;
+                remote sessions are available too.
+            </p>
+
+            <div class="row g-4 text-center">
+                <div class="col-md-4">
+                    <h4 style="color: #00bfff;">Clear plan first</h4>
+                    <div style="color: #aaa; font-size: 0.95rem;">You know the problem, the approach and the cost before any work begins.</div>
+                </div>
+                <div class="col-md-4">
+                    <h4 style="color: #00bfff;">Plain English</h4>
+                    <div style="color: #aaa; font-size: 0.95rem;">You will understand what was wrong and what was done to fix it.</div>
+                </div>
+                <div class="col-md-4">
+                    <h4 style="color: #00bfff;">Private by default</h4>
+                    <div style="color: #aaa; font-size: 0.95rem;">Your files and data are treated as confidential.</div>
+                </div>
+            </div>
+
+            <div class="d-flex gap-2 justify-content-center flex-wrap mt-4">
+                <a class="btn btn-outline-info" style="color: var(--et-accent, #00bfff) !important;" href="/contact">Book Online</a>
+                <a class="btn btn-outline-light" style="color: var(--et-btn-text, #e0e0e0) !important;" href="/contactus">Contact Us</a>
+                <a class="btn btn-outline-light" style="color: var(--et-btn-text, #e0e0e0) !important;" href="#services">See Services</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="container py-5">
+    <h2 class="text-center mb-4" style="color: #00bfff;">Why England Technologies</h2>
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="card h-100"><div class="card-body" style="color: #ddd;">
+                <h3 class="h5" style="color: #00bfff;">Hands-on experience</h3>
+                <p class="mb-0">I run and maintain my own multi-server lab, so I work with real systems, not just theory.</p>
+            </div></div>
+        </div>
+        <div class="col-md-6">
+            <div class="card h-100"><div class="card-body" style="color: #ddd;">
+                <h3 class="h5" style="color: #00bfff;">Local and accountable</h3>
+                <p class="mb-0">You are working directly with the person doing the job, from first message to final check.</p>
+            </div></div>
+        </div>
+        <div class="col-12">
+            <div class="card h-100"><div class="card-body" style="color: #ddd;">
+                <h3 class="h5" style="color: #00bfff;">Certifications</h3>
+                <ul class="mb-0">
+                    <li>MTA Certificate in Cybersecurity</li>
+                    <li>Networking Fundamentals Certificate in Cybersecurity</li>
+                    <li>Windows&reg; Operating System Fundamentals in Cybersecurity</li>
+                    <li>Security Fundamentals Certificate in Cybersecurity</li>
+                    <li>CompTIA ITF+</li>
+                </ul>
+            </div></div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .service-category { transition: transform .15s, border-color .15s; }
+    .service-category:hover, .service-category:focus-visible { transform: translateY(-3px); border-color: #00bfff; }
+</style>
+
+<section id="services" class="container pt-5 pb-3" style="scroll-margin-top: 1rem;">
+    <h2 class="text-center mb-3" style="color: #00bfff;">What I can help with</h2>
+    <p class="text-center mx-auto mb-4" style="color: #ddd; max-width: 700px;">
+        Whether something is broken, being replaced, or you just want it set up properly,
+        there is a session for it. Tap the box closest to your situation, or
+        <a href="/contact" style="color: #00bfff;">book a time</a> or <a href="tel:+19042580217" style="color: #00bfff;">call 904-258-0217</a> and tell me what is going on and I will point you to the right one.
+    </p>
+
+    <div class="row g-3">
+        @foreach (var c in Categories)
+        {
+            <div class="col-md-6">
+                <a href="#@c.Id" class="card h-100 text-decoration-none service-category">
+                    <div class="card-body">
+                        <h3 class="h5" style="color: #00bfff;">@c.Title</h3>
+                        <p class="mb-3" style="color: #ddd;">@string.Join(" · ", c.Intro)</p>
+                        <span style="color: #7fd8ff; font-weight: 600;">See services &darr;</span>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+</section>
+
+<style>
+    .service-accordion .accordion-item { background: rgba(20,22,30,.95); border: 1px solid #00bfff55; color: #ddd; }
+    .service-accordion .accordion-item { border-radius: .75rem; overflow: hidden; }
+    .service-accordion .accordion-button { background: transparent; color: #00bfff; box-shadow: none; gap: .5rem; flex-direction: column; align-items: flex-start; justify-content: center; min-height: 150px; padding: 1.5rem 3rem 1.5rem 1.5rem; position: relative; }
+    .service-accordion .accordion-button::after { content: ""; position: absolute; right: 1.25rem; top: 50%; width: .6rem; height: .6rem; margin-top: -.45rem; border-right: 2px solid #00bfff; border-bottom: 2px solid #00bfff; background: none; filter: none; transform: rotate(45deg); transition: transform .2s; }
+    .service-accordion .accordion-button:not(.collapsed)::after { transform: rotate(-135deg); margin-top: -.1rem; }
+    .service-accordion .accordion-button:not(.collapsed) { background: #12303d; color: #00bfff; }
+    .service-accordion .accordion-button::after { filter: invert(60%) sepia(90%) saturate(1500%) hue-rotate(160deg); }
+    .service-title { font-size: 1.25rem; font-weight: 600; }
+    .service-meta { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
+    .service-price { font-weight: bold; font-size: 1.1rem; }
+    .service-time { background: #12303d; color: #7fd8ff; }
+    .service-accordion .accordion-body { color: #ddd; padding: 1.25rem 1.5rem 1.5rem; }
+</style>
+
+<style>
+    .service-jump { position: sticky; top: 0; z-index: 50; padding: .6rem 1rem; text-align: center;
+                    background: var(--lt-panel, rgba(10,10,10,.92)); border-bottom: 1px solid #00bfff55; }
+    .service-jump a { display: inline-block; margin: .15rem .35rem; padding: .25rem .8rem; border: 1px solid #00bfff88;
+                      border-radius: 999px; text-decoration: none; font-size: .95rem; }
+</style>
+
+<div id="service-list">
+    <nav class="service-jump" aria-label="Service categories">
+        @foreach (var c in Categories)
+        {
+            <a href="#@c.Id" style="color: #00bfff;">@c.Title</a>
+        }
+    </nav>
+
+@foreach (var c in Categories)
+{
+    <section id="@c.Id" class="container py-4" style="scroll-margin-top: 4.5rem;">
+        <h3 class="h3 mb-4 text-center" style="color: #00bfff;">@c.Title</h3>
+
+        <div class="row g-4 align-items-start justify-content-center mx-auto service-accordion" style="max-width: 960px;" id="acc-@c.Id">
+            @foreach (var s in c.Items)
+            {
+                <div class="col-md-6"><div class="accordion-item">
+                    <h4 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#svc-@s.Slug" aria-expanded="false" aria-controls="svc-@s.Slug">
+                            <span class="service-title">@s.Title</span>
+                            <span class="service-meta">
+                                <span class="service-price">@(s.PriceLabel ?? (s.Price is int pr ? $"${pr}" : "Hourly rates apply"))</span>
+                                <span class="badge rounded-pill text-nowrap service-time">Estimated Time: @s.Time</span>
+                            </span>
+                        </button>
+                    </h4>
+                    <div id="svc-@s.Slug" class="accordion-collapse collapse">
+                        <div class="accordion-body">
+                            <p class="mb-2">@s.Summary</p>
+                            <ul>
+                                @foreach (var b in s.Bullets)
+                                {
+                                    <li>@b</li>
+                                }
+                            </ul>
+                            @if (!string.IsNullOrEmpty(s.Note))
+                            {
+                                <p style="color: #aaa; font-size: 0.9rem;">@s.Note</p>
+                            }
+                            <a class="btn btn-outline-info" style="color: var(--et-accent, #00bfff) !important;" href="/contact?service=@s.Slug">Book appointment now</a>
+                        </div>
+                    </div>
+                </div></div>
+            }
+        </div>
+    </section>
+}
+</div>
+
+<section class="container py-5">
+    <h2 class="text-center mb-2" style="color: #00bfff;">How it works</h2>
+    <p class="text-center mb-4" style="color: #aaa;">Getting help is three steps.</p>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card h-100"><div class="card-body" style="color: #ddd;">
+                <h3 class="h5" style="color: #00bfff;">1. Reach out</h3>
+                <p class="mb-0">Book a time online, or call 904-258-0217, and tell me what is going on and what device or system is involved.</p>
+            </div></div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100"><div class="card-body" style="color: #ddd;">
+                <h3 class="h5" style="color: #00bfff;">2. Get a clear plan</h3>
+                <p class="mb-0">I explain what I think the problem is, what it will take, and the cost before any work begins.</p>
+            </div></div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100"><div class="card-body" style="color: #ddd;">
+                <h3 class="h5" style="color: #00bfff;">3. Problem solved</h3>
+                <p class="mb-0">I do the work, walk you through what changed, and make sure everything runs the way it should.</p>
+            </div></div>
+        </div>
+    </div>
+</section>
+
+<section id="rates" class="container py-5" style="scroll-margin-top: 1rem;">
+    <h2 class="text-center mb-2" style="color: #00bfff;">Rates and Policies</h2>
+    <p class="text-center mx-auto mb-2" style="color: #aaa; max-width: 800px;">
+        Service prices above are flat. The price is the same whether the service is done on-site or remotely, and it covers the time listed for that service.
+    </p>
+    <p class="text-center mx-auto mb-2" style="color: #aaa; max-width: 800px;">
+        If a session runs past its listed time, the extra time is billed at $50 per hour in 15-minute increments. I will let you know before continuing past the listed time.
+    </p>
+    <p class="text-center mx-auto mb-4" style="color: #aaa; max-width: 800px;">
+        Work that is not one of the listed services is billed hourly. Full details are in the
+        <a href="/terms" style="color: #00bfff;">Terms and Conditions</a> and
+        <a href="/privacy" style="color: #00bfff;">Privacy Policy</a>.
+    </p>
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="card h-100"><div class="card-body" style="color: #ddd;">
+                <h3 class="h5" style="color: #00bfff;">Hourly rates</h3>
+                <ul class="mb-0">
+                    <li>First hour, on-site: $65</li>
+                    <li>First hour, remote: $55</li>
+                    <li>Each additional hour: $50, billed in 15-minute increments</li>
+                    <li>Work under one hour: $1 per minute, 30-minute minimum ($30)</li>
+                    <li>Each additional drive for Secure Drive Wipe: $15</li>
+                </ul>
+            </div></div>
+        </div>
+        <div class="col-md-6">
+            <div class="card h-100"><div class="card-body" style="color: #ddd;">
+                <h3 class="h5" style="color: #00bfff;">Travel</h3>
+                <p>No travel fee within 25 miles of ZIP code 32259-3268 (one way).</p>
+                <p class="mb-0">Beyond that, $1.50 per mile past the 25-mile radius. The fee is based on the one-way driving distance from that ZIP code to your address.</p>
+            </div></div>
+        </div>
+        <div class="col-12">
+            <div class="card h-100"><div class="card-body" style="color: #ddd;">
+                <h3 class="h5" style="color: #00bfff;">Policies</h3>
+                <ul class="mb-0">
+                    <li>You are responsible for supplying all hardware and supplies. Installation fees apply to labor and expertise only.</li>
+                    <li>No extra fee for same-day appointments or after-hours appointments.</li>
+                    <li>Data recovery starts with a 30-minute evaluation. If you do not continue, the evaluation fee is the only fee. If you approve a full recovery, the evaluation fee is included in the recovery price and is not added.</li>
+                    <li>Recovery results depend on the condition of your drive. The evaluation shows what is realistic before you commit.</li>
+                    <li>You choose your own times.</li>
+                    <li>The times listed are estimates based on experience. Some situations may take longer and others may be shorter, depending on the circumstances.</li>
+                    <li>Because times are estimates and can vary, I will see as many customers as I can on the day they schedule their appointment. If I am unable to make it that day, I will contact you to arrange another day.</li>
+                </ul>
+            </div></div>
+        </div>
+    </div>
+</section>
+
+
+<section class="container py-5 text-center">
+    <h2 class="mb-3" style="color: #00bfff;">Ready to get started?</h2>
+    <p style="color: #ddd;">Pick a service above and book a time that works for you, or call and describe your issue and I will get back to you with next steps.</p>
+    <div class="d-flex gap-2 justify-content-center flex-wrap">
+        <a class="btn btn-outline-info" style="color: var(--et-accent, #00bfff) !important;" href="/contact">Book Online</a>
+        <a class="btn btn-outline-light" style="color: var(--et-btn-text, #e0e0e0) !important;" href="/contactus">Contact Us</a>
+    </div>
+</section>

@@ -3,6 +3,22 @@ using EnglandTechnologies.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Hosts that belong to the main site
+var mainHosts = new[]
+{
+    "englandtechnologies.net",
+    "www.englandtechnologies.net",
+    "portfolio.englandtechnologies.net", // only if this is served by this app
+    "localhost"
+};
+
+// Hosts that belong to the tech support site
+var supportHosts = new[]
+{
+    "techsupport.englandtechnologies.net",
+    "techsupport.localhost"
+};
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton<MetricsStore>();
@@ -32,6 +48,9 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+// Rejects any Host header not listed in AllowedHosts (appsettings.json)
+app.UseHostFiltering();
+
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseCors("AllowPortfolio");
@@ -43,13 +62,25 @@ app.MapControllerRoute(
         name: "docs",
         pattern: "docs/{*slug}",
         defaults: new { controller = "Docs", action = "Page" })
+    .RequireHost(mainHosts)
     .WithStaticAssets();
 
-app.MapHub<EnglandTechnologies.Hubs.MetricsHub>("/metricsHub");
+// Tech support subdomain (also reachable locally at http://techsupport.localhost:5255).
+// Must be mapped before the catch-all "default" route so the host constraint wins.
+app.MapControllerRoute(
+        name: "techsupport",
+        pattern: "{action=Index}/{id?}",
+        defaults: new { controller = "TechSupport" })
+    .RequireHost(supportHosts)
+    .WithStaticAssets();
+
+app.MapHub<EnglandTechnologies.Hubs.MetricsHub>("/metricsHub")
+    .RequireHost(mainHosts);
 
 app.MapControllerRoute(
         name: "default",
         pattern: "{controller=Home}/{action=Index}/{id?}")
+    .RequireHost(mainHosts)
     .WithStaticAssets();
 
 app.Run();

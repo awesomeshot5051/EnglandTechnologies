@@ -1,0 +1,537 @@
+/* ==========================================================================
+   England Technologies theme for Easy!Appointments (backend)
+   Loaded AFTER the app's own CSS, so equal-specificity rules here win.
+   ========================================================================== */
+
+/* --- 1. Tokens ----------------------------------------------------------- */
+:root,
+[data-bs-theme="light"],
+[data-bs-theme="dark"] {
+  --et-bg: #0a0a0a;
+  --et-panel: #14161e;
+  --et-panel-2: #0f121c;
+  --et-text: #e0e0e0;
+  --et-heading: #eef3f8;
+  --et-muted: #8b95a5;
+  --et-accent: #00bfff;
+  --et-accent-soft: rgba(0, 191, 255, 0.14);
+  --et-accent-hover: rgba(0, 191, 255, 0.08);
+  --et-border: rgba(0, 191, 255, 0.25);
+  --et-line: rgba(255, 255, 255, 0.08);
+  --et-link: #8a2be2;
+  --et-link-hover: #9b30ff;
+
+  color-scheme: dark;
+
+  /* Bootstrap 5.3 variables: this is what fixes the white-on-white text */
+  --bs-body-bg: var(--et-bg);
+  --bs-body-color: var(--et-text);
+  --bs-emphasis-color: var(--et-heading);
+  --bs-secondary-color: var(--et-muted);
+  --bs-secondary-bg: var(--et-panel);
+  --bs-tertiary-bg: var(--et-panel-2);
+  --bs-border-color: var(--et-line);
+  --bs-link-color: var(--et-link);
+  --bs-link-hover-color: var(--et-link-hover);
+}
+
+/* --- 2. Global ----------------------------------------------------------- */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: 600; /* change to 400 if the dense backend feels heavy */
+  background-color: var(--et-bg);
+  color: var(--et-text);
+  line-height: 1.6;
+}
+
+/* Static version of your background pattern (no markup needed) */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.2) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(147, 51, 234, 0.2) 0%, transparent 50%),
+    radial-gradient(circle at 40% 80%, rgba(239, 68, 68, 0.14) 0%, transparent 60%),
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+}
+
+/* Links: skip buttons, tabs and menu items so they keep their own colors */
+a:not(.navbar-brand):not(.btn):not(.nav-link):not(.page-link):not(.dropdown-item):not(.list-group-item) {
+  color: var(--et-link) !important;
+}
+a:not(.navbar-brand):not(.btn):not(.nav-link):not(.page-link):not(.dropdown-item):not(.list-group-item):hover {
+  color: var(--et-link-hover) !important;
+}
+
+h1, h2, h3, h4, h5, h6,
+#services-page h2,
+#users-page h2,
+#settings-page h2 {
+  color: var(--et-heading);
+}
+
+body legend {
+  color: var(--et-muted);
+}
+
+hr {
+  border-color: var(--et-line);
+  opacity: 1;
+}
+
+/* --- 3. Header ----------------------------------------------------------- */
+#header {
+  background-color: var(--et-panel);
+  border-bottom: 1px solid var(--et-border);
+  box-shadow: none;
+}
+
+#header #header-logo small {
+  color: var(--et-accent);
+}
+
+#header #header-logo h6 {
+  color: var(--et-heading);
+}
+
+#header .nav-link {
+  color: var(--et-text);
+}
+
+#header #header-menu .nav-item:hover {
+  background: var(--et-accent-hover);
+}
+
+#header #header-menu .nav-item.active {
+  background: var(--et-accent-soft);
+  box-shadow: inset 0 -3px 0 var(--et-accent);
+}
+
+#header #header-menu .nav-item.active .nav-link {
+  color: var(--et-accent);
+}
+
+/* --- 4. Footer, loading, notifications ----------------------------------- */
+#footer {
+  background-color: var(--et-panel);
+  border-top: 1px solid var(--et-line);
+  color: var(--et-muted);
+}
+
+#loading {
+  background: rgba(10, 10, 10, 0.8);
+}
+
+#notification .alert {
+  background-color: var(--et-panel);
+  color: var(--et-text);
+  border: 1px solid var(--et-border);
+  border-left: 4px solid var(--et-accent);
+  box-shadow: 0 0 20px rgba(0, 191, 255, 0.15);
+}
+
+#notification .close {
+  color: var(--et-muted);
+}
+
+.alert {
+  background-color: rgba(13, 110, 253, 0.15);
+  border-color: rgba(13, 110, 253, 0.4);
+  color: var(--et-text);
+}
+
+/* --- 5. Modals ----------------------------------------------------------- */
+body .modal-content {
+  background-color: var(--et-panel);
+  color: var(--et-text);
+  border: 1px solid var(--et-border);
+}
+
+body .modal-header {
+  background: var(--et-panel-2);
+  border-bottom: 1px solid var(--et-border);
+}
+
+body .modal .modal-title,
+body .modal-header h3 {
+  color: var(--et-heading);
+}
+
+body .modal-header .close {
+  color: var(--et-accent);
+}
+
+body .modal-footer,
+body .modal.full-screen .modal-footer {
+  background-color: var(--et-panel-2);
+  border-top: 1px solid var(--et-line);
+}
+
+.btn-close {
+  filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+/* --- 6. Forms (this is where the invisible checkboxes get fixed) --------- */
+.form-control,
+.form-select {
+  background-color: var(--et-panel-2);
+  color: var(--et-text);
+  border-color: var(--et-border);
+}
+
+.form-control::placeholder {
+  color: var(--et-muted);
+}
+
+.form-control:focus,
+.form-select:focus {
+  background-color: var(--et-panel-2);
+  color: var(--et-text);
+  border-color: var(--et-accent);
+  box-shadow: 0 0 0 0.2rem rgba(0, 191, 255, 0.2);
+}
+
+/* Read-only "detail view" fields: the app forces white here */
+.backend-page .form-control:disabled,
+.backend-page .form-control[readonly],
+.backend-page .form-select:disabled,
+.backend-page .form-select[readonly] {
+  background-color: transparent;
+  color: #cfd8e3;
+  border-color: transparent;
+}
+
+#calendar-page #calendar-filter select:disabled {
+  background: transparent;
+}
+
+.form-label,
+.form-check-label,
+label,
+.control-label {
+  color: var(--et-text);
+}
+
+.form-check-input {
+  background-color: var(--et-panel-2);
+  border: 1px solid var(--et-accent);
+}
+
+.form-check-input:checked {
+  background-color: var(--et-accent);
+  border-color: var(--et-accent);
+}
+
+.form-check-input:focus {
+  border-color: var(--et-accent);
+  box-shadow: 0 0 0 0.2rem rgba(0, 191, 255, 0.2);
+}
+
+.input-group-text {
+  background-color: var(--et-panel);
+  color: var(--et-text);
+  border-color: var(--et-border);
+}
+
+/* Provider "Services" tab and secretary "Providers" tab checkbox lists */
+#users-page #provider-services,
+#users-page #secretary-providers {
+  background-color: var(--et-panel-2);
+  border: 1px solid var(--et-border);
+  border-radius: 6px;
+  padding: 10px;
+}
+
+#users-page #provider-services label,
+#users-page #secretary-providers label {
+  color: var(--et-text);
+}
+
+/* --- 7. Buttons ---------------------------------------------------------- */
+.btn-primary {
+  --bs-btn-color: #001a26;
+  --bs-btn-bg: var(--et-accent);
+  --bs-btn-border-color: var(--et-accent);
+  --bs-btn-hover-color: #001a26;
+  --bs-btn-hover-bg: #33ccff;
+  --bs-btn-hover-border-color: #33ccff;
+  --bs-btn-active-color: #001a26;
+  --bs-btn-active-bg: #66d9ff;
+  --bs-btn-active-border-color: #66d9ff;
+  --bs-btn-disabled-bg: var(--et-accent);
+  --bs-btn-disabled-border-color: var(--et-accent);
+}
+
+.btn-outline-primary {
+  --bs-btn-color: var(--et-accent);
+  --bs-btn-border-color: var(--et-accent);
+  --bs-btn-hover-color: #001a26;
+  --bs-btn-hover-bg: var(--et-accent);
+  --bs-btn-hover-border-color: var(--et-accent);
+  --bs-btn-active-color: #001a26;
+  --bs-btn-active-bg: var(--et-accent);
+}
+
+.btn-light,
+.btn-outline-secondary,
+.btn-secondary {
+  --bs-btn-color: var(--et-text);
+  --bs-btn-bg: var(--et-panel);
+  --bs-btn-border-color: var(--et-border);
+  --bs-btn-hover-color: var(--et-heading);
+  --bs-btn-hover-bg: var(--et-accent-soft);
+  --bs-btn-hover-border-color: var(--et-accent);
+  --bs-btn-active-color: var(--et-heading);
+  --bs-btn-active-bg: var(--et-accent-soft);
+  --bs-btn-active-border-color: var(--et-accent);
+}
+
+/* --- 8. Cards, tables, dropdowns ----------------------------------------- */
+.card {
+  background-color: rgba(20, 22, 30, 0.95) !important;
+  border: 1px solid var(--et-border);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  border-color: var(--et-accent);
+  box-shadow: 0 0 25px rgba(0, 191, 255, 0.2);
+}
+
+.table,
+.table-hover {
+  --bs-table-bg: rgba(15, 18, 28, 0.9);
+  --bs-table-color: var(--et-text);
+  --bs-table-border-color: var(--et-line);
+  --bs-table-striped-bg: rgba(255, 255, 255, 0.03);
+  --bs-table-hover-bg: var(--et-accent-hover);
+  --bs-table-hover-color: var(--et-heading);
+}
+
+.dropdown-menu {
+  background-color: var(--et-panel);
+  border: 1px solid var(--et-border);
+  --bs-dropdown-link-color: var(--et-text);
+  --bs-dropdown-link-hover-bg: var(--et-accent-soft);
+  --bs-dropdown-link-hover-color: var(--et-heading);
+  --bs-dropdown-link-active-bg: var(--et-accent-soft);
+  --bs-dropdown-link-active-color: var(--et-accent);
+  --bs-dropdown-divider-bg: var(--et-line);
+}
+
+pre {
+  background-color: #111418;
+  border: 1px solid rgba(0, 191, 255, 0.3);
+  color: #67e8f9;
+  border-radius: 8px;
+  padding: 1.25rem;
+  font-size: 0.9rem;
+}
+
+/* --- 9. Tabs and pills (users, services, settings, providers) ------------ */
+#services-page .nav,
+#users-page .nav,
+#settings-page .nav {
+  background-color: var(--et-panel);
+  border: 1px solid var(--et-line);
+  border-radius: 6px;
+}
+
+.nav-pills .nav-link,
+.nav-tabs .nav-link {
+  color: var(--et-text);
+}
+
+.nav-pills .nav-link:hover,
+.nav-tabs .nav-link:hover {
+  color: var(--et-heading);
+  background-color: var(--et-accent-hover);
+}
+
+.nav-pills .nav-link.active,
+.nav-tabs .nav-link.active {
+  color: var(--et-accent);
+  background-color: var(--et-accent-soft);
+  border-color: var(--et-border);
+}
+
+#providers-page #providers .switch-view {
+  background: transparent;
+}
+
+/* Toggle rows that the app paints light blue when active */
+#users-page #admin-notifications.active,
+#users-page #provider-notifications.active,
+#users-page #secretary-notifications.active,
+#settings-page #customer-notifications.active,
+#settings-page #display-any-provider.active,
+#settings-page #require-captcha.active,
+#settings-page #require-phone-number.active,
+#settings-page #user-notifications.active {
+  background: var(--et-accent-soft);
+  color: var(--et-heading);
+  border-color: var(--et-accent);
+}
+
+.list-group-item {
+  background-color: var(--et-panel);
+  color: var(--et-text);
+  border-color: var(--et-line);
+}
+
+#settings-page #about .current-version {
+  background: var(--et-panel);
+  color: var(--et-text);
+  border: 1px solid var(--et-line);
+}
+
+/* --- 10. Record lists (customers, services, providers, users) ------------ */
+.backend-page .filter-records .results .entry:hover:not(.selected) {
+  background-color: var(--et-accent-hover);
+}
+
+.backend-page .filter-records .results .entry.selected {
+  background-color: var(--et-accent-soft);
+  border-right: 5px solid var(--et-accent);
+}
+
+#customers-page #customer-appointments .appointment-row {
+  border-bottom: 1px solid var(--et-line);
+}
+
+#existing-customers-list div:hover {
+  background: var(--et-accent-soft);
+  color: var(--et-heading);
+}
+
+body .jspDrag {
+  background: rgba(0, 191, 255, 0.35);
+}
+
+body .jspTrack {
+  background: var(--et-panel-2);
+}
+
+/* --- 11. Calendar -------------------------------------------------------- */
+#calendar-page #calendar-toolbar {
+  background: var(--et-panel);
+  border-bottom: 1px solid var(--et-border);
+  color: var(--et-text);
+}
+
+#calendar {
+  --fc-page-bg-color: var(--et-bg);
+  --fc-neutral-bg-color: var(--et-panel);
+  --fc-neutral-text-color: var(--et-muted);
+  --fc-border-color: var(--et-line);
+  --fc-today-bg-color: rgba(0, 191, 255, 0.08);
+  --fc-list-event-hover-bg-color: var(--et-accent-soft);
+  --fc-button-bg-color: var(--et-panel);
+  --fc-button-border-color: var(--et-border);
+  --fc-button-text-color: var(--et-text);
+  --fc-button-hover-bg-color: var(--et-accent-soft);
+  --fc-button-hover-border-color: var(--et-accent);
+  --fc-button-active-bg-color: var(--et-accent-soft);
+  --fc-button-active-border-color: var(--et-accent);
+}
+
+#calendar .fc-col-header-cell-cushion {
+  color: var(--et-text) !important;
+}
+
+#calendar table thead .fc-first {
+  background: var(--et-panel);
+}
+
+#calendar table thead .fc-first th {
+  color: var(--et-muted);
+}
+
+/* Unavailability, breaks and custom blocks: swap the light stripe images */
+#calendar-page #calendar .fc-unavailability,
+#calendar .fc-unavailability,
+#calendar-page #calendar .fc-break,
+#calendar-page #calendar .fc-custom {
+  background-image: none;
+  background-color: #1b2030;
+  color: #cbd5e1;
+  border: 1px solid var(--et-line);
+  opacity: 1;
+}
+
+#calendar .calendar-view .date-column .provider-column table thead {
+  background-color: var(--et-panel);
+}
+
+#calendar .calendar-header .select2-container--default .select2-selection--multiple {
+  background-color: var(--et-panel-2);
+  border-color: var(--et-border);
+}
+
+#calendar .select2-container--default .select2-selection--multiple .select2-selection__choice {
+  background-color: var(--et-accent-soft);
+  border: 1px solid var(--et-border);
+  color: var(--et-heading);
+}
+
+/* --- 12. Select2 and datepicker popups ----------------------------------- */
+.select2-dropdown {
+  background-color: var(--et-panel);
+  border: 1px solid var(--et-border);
+  color: var(--et-text);
+}
+
+.select2-container--default .select2-results__option--highlighted[aria-selected],
+.select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
+  background-color: var(--et-accent-soft);
+  color: var(--et-heading);
+}
+
+.select2-container--default .select2-search--dropdown .select2-search__field {
+  background-color: var(--et-panel-2);
+  color: var(--et-text);
+  border-color: var(--et-border);
+}
+
+.flatpickr-calendar {
+  background: var(--et-panel);
+  border: 1px solid var(--et-border);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+}
+
+.flatpickr-day,
+.flatpickr-months .flatpickr-month,
+.flatpickr-current-month .flatpickr-monthDropdown-months,
+span.flatpickr-weekday {
+  color: var(--et-text);
+  fill: var(--et-text);
+  background: transparent;
+}
+
+.flatpickr-day.selected,
+.flatpickr-day.selected:hover {
+  background: var(--et-accent);
+  border-color: var(--et-accent);
+  color: #001a26;
+}
+
+.flatpickr-day:hover {
+  background: var(--et-accent-soft);
+  border-color: var(--et-accent-soft);
+}
+
+/* --- 13. Misc ------------------------------------------------------------ */
+.security-notice {
+  font-weight: normal !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition: none;
+  }
+}

@@ -1,0 +1,98 @@
+/* --- Global Hamburger & Side Drawer Menu Styles --- */
+.menu-toggle-btn {
+    background: rgba(20, 20, 25, 0.85);
+    border: 1px solid rgba(0, 191, 255, 0.3);
+    color: #00bfff !important;
+    font-family: 'Cascadia Code', monospace;
+    font-size: 0.9rem;
+    padding: 6px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+.menu-toggle-btn:hover {
+    background: rgba(0, 191, 255, 0.1);
+    border-color: #00bfff;
+    box-shadow: 0 0 12px rgba(0, 191, 255, 0.2);
+}
+
+.nav-drawer {
+    position: fixed;
+    top: 0;
+    right: -320px;
+    width: 320px;
+    height: 100vh;
+    background: rgba(13, 15, 18, 0.98);
+    backdrop-filter: blur(8px);
+    border-left: 1px solid rgba(0, 191, 255, 0.2);
+    z-index: 1100;
+    transition: right 0.25s cubic-bezier(0.77, 0, 0.175, 1);
+    padding: 2rem 1.5rem;
+    box-shadow: -10px 0 30px rgba(0,0,0,0.6);
+    overflow-y: auto;
+}
+.nav-drawer.open {
+    right: 0;
+}
+
+.nav-drawer-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(1px);
+    z-index: 1090;
+    display: none;
+}
+.nav-drawer-overlay.show {
+    display: block;
+}
+
+.drawer-section-title {
+    color: #00bfff;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    border-bottom: 1px solid rgba(0, 191, 255, 0.15);
+    padding-bottom: 4px;
+    margin-top: 1.75rem;
+    margin-bottom: 0.75rem;
+    font-weight: bold;
+}
+
+.drawer-link {
+    display: block;
+    color: #ccc !important;
+    text-decoration: none;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    transition: all 0.15s ease;
+    font-family: 'Cascadia Code', monospace;
+}
+.drawer-link:hover {
+    color: #fff !important;
+    background: rgba(0, 191, 255, 0.08);
+    padding-left: 14px;
+}
+.drawer-link.active-page {
+    color: #00bfff !important;
+    background: rgba(0, 191, 255, 0.05);
+    border-left: 2px solid #00bfff;
+    padding-left: 12px;
+}
+.close-drawer-btn {
+    background: transparent;
+    border: none;
+    color: #777;
+    font-size: 1.5rem;
+    line-height: 1;
+    padding: 0;
+    cursor: pointer;
+    transition: color 0.15s ease;
+}
+.close-drawer-btn:hover {
+    color: #ff4500;
+}

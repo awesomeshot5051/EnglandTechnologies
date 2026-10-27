@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - England Technologies Tech Support</title>
+    <script src="~/js/theme.js" asp-append-version="true"></script>
+    <link rel="icon" type="image/png" href="/etico-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/etico.svg" />
+    <link rel="shortcut icon" href="/etico.ico" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/drawer.css" asp-append-version="true" />
+    <style>
+        /* Bootstrap loads after site.css (same as the lab layout), so restate the dark page background. */
+        body { background-color: #0a0a0a; }
+        /* Keep the background pattern still on this section. */
+        .bg-pattern::before { animation: none; }
+
+        /* Back-to-top button: hidden until the page is scrolled. */
+        .back-to-top {
+            position: fixed; right: 1.25rem; bottom: 1.25rem; z-index: 1000;
+            width: 44px; height: 44px; border-radius: 50%;
+            border: 1px solid #00bfff; background: rgba(10, 10, 10, 0.85); color: #00bfff;
+            font-size: 1.4rem; line-height: 1; cursor: pointer;
+            opacity: 0; visibility: hidden; transform: translateY(10px);
+            transition: opacity .2s, transform .2s, visibility .2s;
+        }
+        .back-to-top.show { opacity: 1; visibility: visible; transform: none; }
+        .back-to-top:hover { background: #00bfff; color: #0a0a0a; }
+
+        /* The closed drawer sits just off-screen; its shadow was bleeding onto the right edge of the page. */
+        .nav-drawer:not(.open) { box-shadow: none; }
+        .menu-toggle-btn { font-family: inherit; }
+        /* Avoid a single word stranded on the last line of a heading. */
+        .hero-title { text-wrap: balance; }
+    </style>
+    <link rel="stylesheet" href="~/css/theme-light.css" asp-append-version="true" />
+    <style>
+        /* Light theme: use the brand blue for links instead of the default purple. */
+        html[data-theme="light"] { --lt-link: #0077b6; --lt-link-hover: #005a8c; }
+        html[data-theme="light"] .nav-drawer:not(.open) { box-shadow: none; }
+    </style>
+</head>
+<body>
+<div class="bg-pattern"></div>
+
+<header>
+    <nav class="navbar navbar-expand navbar-dark bg-dark border-bottom box-shadow mb-3">
+        <div class="container-fluid">
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <img src="/etico-96x96.png" alt="ET" width="40" height="40" class="d-inline-block align-text-top rounded me-2"/>
+                <span class="d-none d-sm-inline">England Technologies Tech Support</span>
+                <span class="d-sm-none">England Technologies</span>
+            </a>
+            <a class="nav-link d-none d-md-block ms-auto me-2 me-sm-3" style="color: #00bfff;" href="/#services">Services</a>
+            <a class="nav-link d-none d-sm-block ms-auto ms-md-0 me-2 me-sm-3" style="color: #00bfff;" href="/about">About</a>
+            <a class="nav-link d-none d-sm-block me-2 me-sm-3" style="color: #00bfff;" href="/contact">Book</a>
+            <button class="menu-toggle-btn ms-auto ms-sm-0" id="menuToggleBtn" aria-label="Open menu">&#9776; Menu</button>
+        </div>
+    </nav>
+</header>
+
+<div class="nav-drawer-overlay" id="drawerOverlay"></div>
+
+<nav class="nav-drawer" id="sideNavDrawer">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+        <span style="color: #00bfff; font-weight: bold; font-family: 'Cascadia Code', monospace;">techsupport</span>
+        <button class="close-drawer-btn" id="menuCloseBtn" aria-label="Close menu">&times;</button>
+    </div>
+
+    <a class="drawer-link" href="/">Home</a>
+    <a class="drawer-link" href="/#services">Services</a>
+    <a class="drawer-link" href="/#rates">Rates and Policies</a>
+    <a class="drawer-link" href="/contact">Book Online</a>
+    <a class="drawer-link" href="/about">About Me</a>
+    <a class="drawer-link" href="/contactus">Contact Us</a>
+    <a class="drawer-link" href="/privacy">Privacy Policy</a>
+    <a class="drawer-link" href="/terms">Terms and Conditions</a>
+</nav>
+
+<main>
+    @RenderBody()
+</main>
+
+<footer class="footer mt-auto">
+    <div class="container text-center py-3" style="color: #777;">
+        <p class="mb-1"><a href="/about" style="color: #00bfff;">About Me</a> &middot; <a href="/contactus" style="color: #00bfff;">Contact Us</a> &middot; <a href="/privacy" style="color: #00bfff;">Privacy Policy</a> &middot; <a href="/terms" style="color: #00bfff;">Terms and Conditions</a> &middot; <a href="/contact" style="color: #00bfff;">Book Online</a> &middot; <a href="tel:+19042580217" style="color: #00bfff;">904-258-0217</a> &middot; <a href="mailto:contact.techsupport@englandtechnologies.net" style="color: #00bfff;">contact.techsupport@englandtechnologies.net</a></p>
+        <p>&copy; 2026 England Technologies – All Rights Reserved</p>
+        
+        Certified by:
+        <img alt="CompTIA ITF+ certification" src="/CompTiAITF%2B.png" style="height: 48px; width: auto;">
+    </div>
+</footer>
+
+<button type="button" class="back-to-top" id="backToTop" aria-label="Back to top">&uarr;</button>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    $(function () {
+        const $drawer = $('#sideNavDrawer'), $overlay = $('#drawerOverlay');
+        const open = () => { $drawer.addClass('open'); $overlay.addClass('show'); };
+        const close = () => { $drawer.removeClass('open'); $overlay.removeClass('show'); };
+        $('#menuToggleBtn').on('click', open);
+        $('#menuCloseBtn, #drawerOverlay').on('click', close);
+        $('.drawer-link').on('click', close);
+        $(document).on('keydown', e => { if (e.key === 'Escape') close(); });
+
+        const $top = $('#backToTop');
+        const toggleTop = () => $top.toggleClass('show', window.scrollY > 50);
+        $(window).on('scroll', toggleTop);
+        toggleTop();
+        $top.on('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    });
+</script>
+</body>
+</html>

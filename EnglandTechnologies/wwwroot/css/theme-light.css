@@ -1,0 +1,273 @@
+/* ==========================================================================
+   England Technologies: light theme.
+   Applies only when <html data-theme="light"> (set by /js/theme.js).
+   Dark remains the default and lives in site.css / drawer.css / page styles.
+   Load this file LAST so it wins over Bootstrap and inline <style> blocks.
+   ========================================================================== */
+
+html[data-theme="light"] {
+  --lt-bg: #f4f7fb;
+  --lt-panel: #ffffff;
+  --lt-panel-2: #eaf1f8;
+  --lt-text: #1f2937;
+  --lt-heading: #0b1b2b;
+  --lt-muted: #5b6676;
+  --lt-accent: #0077b6;       /* darker sibling of #00bfff for contrast on white */
+  --lt-accent-soft: rgba(0, 119, 182, 0.12);
+  --lt-border: rgba(0, 119, 182, 0.28);
+  --lt-line: rgba(15, 23, 42, 0.12);
+  --lt-link: #6a1fb8;         /* darker sibling of #8a2be2 */
+  --lt-link-hover: #4c1590;
+  --et-accent: #0077b6;
+  --et-btn-text: #0b1b2b;
+  --lt-warn: #b45309;         /* readable replacement for #ffaa00 */
+
+  color-scheme: light;
+  --bs-body-bg: var(--lt-bg);
+  --bs-body-color: var(--lt-text);
+  --bs-emphasis-color: var(--lt-heading);
+  --bs-secondary-color: var(--lt-muted);
+  --bs-border-color: var(--lt-line);
+}
+
+/* --- Base ---------------------------------------------------------------- */
+html[data-theme="light"],
+html[data-theme="light"] body {
+  background-color: var(--lt-bg);
+  color: var(--lt-text);
+}
+
+html[data-theme="light"] a:not(.navbar-brand):not(.drawer-link):not(.btn) {
+  color: var(--lt-link) !important;
+}
+html[data-theme="light"] a:not(.navbar-brand):not(.drawer-link):not(.btn):hover {
+  color: var(--lt-link-hover) !important;
+}
+
+html[data-theme="light"] h1,
+html[data-theme="light"] h2,
+html[data-theme="light"] h3,
+html[data-theme="light"] h4,
+html[data-theme="light"] h5,
+html[data-theme="light"] h6 {
+  color: var(--lt-heading);
+}
+
+/* Background pattern: same blobs, much softer, on a light base */
+html[data-theme="light"] .bg-pattern::before {
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.16) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(147, 51, 234, 0.12) 0%, transparent 50%),
+    radial-gradient(circle at 40% 80%, rgba(239, 68, 68, 0.08) 0%, transparent 60%),
+    linear-gradient(rgba(15, 23, 42, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 23, 42, 0.04) 1px, transparent 1px);
+  opacity: 1;
+}
+
+/* --- Header / footer ----------------------------------------------------- */
+html[data-theme="light"] .navbar.bg-dark {
+  background-color: var(--lt-panel) !important;
+  border-bottom-color: var(--lt-border) !important;
+}
+html[data-theme="light"] .navbar-brand {
+  color: var(--lt-heading) !important;
+}
+html[data-theme="light"] .navbar .nav-link {
+  color: var(--lt-accent) !important;
+}
+
+html[data-theme="light"] .footer {
+  background: rgba(255, 255, 255, 0.95);
+  border-top-color: var(--lt-line);
+  color: var(--lt-muted);
+}
+html[data-theme="light"] .footer [style*="color: #777"],
+html[data-theme="light"] .footer.container [style*="color: #777"] {
+  color: var(--lt-muted) !important;
+}
+
+/* --- Hero ---------------------------------------------------------------- */
+html[data-theme="light"] .hero {
+  background: linear-gradient(to bottom right, #ffffff, #eef4fb, #d9ecf8);
+}
+html[data-theme="light"] .hero-title {
+  color: var(--lt-accent);
+  text-shadow: none;
+}
+html[data-theme="light"] .verse-box,
+html[data-theme="light"] .error-panel {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: var(--lt-border);
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.12);
+}
+html[data-theme="light"] #bible-verse,
+html[data-theme="light"] .error-text {
+  color: var(--lt-text);
+}
+html[data-theme="light"] #verse-ref {
+  color: var(--lt-accent);
+}
+html[data-theme="light"] .error-title {
+  color: var(--lt-accent);
+  text-shadow: none;
+}
+
+/* --- Cards, tables, code, alerts ----------------------------------------- */
+html[data-theme="light"] .card {
+  background-color: var(--lt-panel) !important;
+  border-color: var(--lt-border);
+  color: var(--lt-text);
+}
+html[data-theme="light"] .card:hover {
+  border-color: var(--lt-accent);
+  box-shadow: 0 6px 24px rgba(0, 119, 182, 0.18);
+}
+
+html[data-theme="light"] .table,
+html[data-theme="light"] .table-hover,
+html[data-theme="light"] .table-dark {
+  --bs-table-bg: var(--lt-panel);
+  --bs-table-color: var(--lt-text);
+  --bs-table-border-color: var(--lt-line);
+  --bs-table-striped-bg: var(--lt-panel-2);
+  --bs-table-striped-color: var(--lt-text);
+  --bs-table-hover-bg: var(--lt-accent-soft);
+  --bs-table-hover-color: var(--lt-heading);
+  background-color: var(--lt-panel);
+  color: var(--lt-text);
+}
+
+html[data-theme="light"] pre {
+  background-color: #eef3f9;
+  border-color: var(--lt-border);
+  color: #035a87;
+}
+html[data-theme="light"] pre::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.06); }
+html[data-theme="light"] pre::-webkit-scrollbar-thumb { background: rgba(0, 119, 182, 0.45); }
+
+html[data-theme="light"] .alert {
+  background-color: rgba(13, 110, 253, 0.08);
+  border-color: rgba(13, 110, 253, 0.35);
+  color: var(--lt-text);
+}
+
+html[data-theme="light"] .list-group-item {
+  background-color: transparent;
+  border-color: var(--lt-line);
+  color: var(--lt-text);
+}
+
+html[data-theme="light"] .btn-outline-light {
+  --bs-btn-color: var(--lt-accent);
+  --bs-btn-border-color: var(--lt-accent);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: var(--lt-accent);
+  --bs-btn-hover-border-color: var(--lt-accent);
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: var(--lt-accent);
+}
+
+/* Utility classes that assume a dark page */
+html[data-theme="light"] .text-light,
+html[data-theme="light"] .text-white { color: var(--lt-text) !important; }
+html[data-theme="light"] .text-muted,
+html[data-theme="light"] .text-white-50 { color: var(--lt-muted) !important; }
+
+/* --- Live metrics -------------------------------------------------------- */
+html[data-theme="light"] .metrics-card {
+  background: var(--lt-panel);
+  border-color: var(--lt-border);
+  color: var(--lt-text);
+}
+html[data-theme="light"] .metrics-card .metric-row { border-bottom-color: var(--lt-line); }
+html[data-theme="light"] .metrics-card .metric-label { color: var(--lt-muted); }
+html[data-theme="light"] .metrics-card .metric-value { color: var(--lt-accent); }
+html[data-theme="light"] .status-dot { background: #9aa3af; }
+html[data-theme="light"] .status-dot.online  { background: #16a34a; box-shadow: 0 0 6px #16a34a; }
+html[data-theme="light"] .status-dot.offline { background: #dc2626; box-shadow: 0 0 6px #dc2626; }
+
+/* --- Drawer -------------------------------------------------------------- */
+html[data-theme="light"] .menu-toggle-btn {
+  background: var(--lt-panel);
+  border-color: var(--lt-border);
+  color: var(--lt-accent) !important;
+}
+html[data-theme="light"] .menu-toggle-btn:hover {
+  background: var(--lt-accent-soft);
+  border-color: var(--lt-accent);
+  box-shadow: 0 0 12px rgba(0, 119, 182, 0.2);
+}
+html[data-theme="light"] .nav-drawer {
+  background: rgba(255, 255, 255, 0.98);
+  border-left-color: var(--lt-border);
+  box-shadow: -10px 0 30px rgba(15, 23, 42, 0.18);
+}
+html[data-theme="light"] .nav-drawer-overlay { background: rgba(15, 23, 42, 0.3); }
+html[data-theme="light"] .nav-drawer > div > span { color: var(--lt-accent) !important; }
+html[data-theme="light"] .drawer-section-title {
+  color: var(--lt-accent);
+  border-bottom-color: var(--lt-border);
+}
+html[data-theme="light"] .drawer-link { color: var(--lt-text) !important; }
+html[data-theme="light"] .drawer-link:hover {
+  color: var(--lt-heading) !important;
+  background: var(--lt-accent-soft);
+}
+html[data-theme="light"] .drawer-link.active-page {
+  color: var(--lt-accent) !important;
+  background: var(--lt-accent-soft);
+  border-left-color: var(--lt-accent);
+}
+html[data-theme="light"] .close-drawer-btn { color: var(--lt-muted); }
+html[data-theme="light"] .close-drawer-btn:hover { color: #dc2626; }
+
+/* Back-to-top button (support layout) */
+html[data-theme="light"] .back-to-top {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: var(--lt-accent);
+  color: var(--lt-accent);
+}
+html[data-theme="light"] .back-to-top:hover { background: var(--lt-accent); color: #fff; }
+
+/* --- Inline-style overrides ----------------------------------------------
+   Views hard-code dark-theme colors in style="" attributes. These attribute
+   selectors remap them. The black "redacted" blocks (#000 on #000) are
+   intentionally left alone. */
+html[data-theme="light"] [style*="color: #00bfff"],
+html[data-theme="light"] [style*="color:#00bfff"] { color: var(--lt-accent) !important; }
+
+html[data-theme="light"] [style*="color: #ddd"],
+html[data-theme="light"] [style*="color: #ccc"],
+html[data-theme="light"] [style*="color: #e0e0e0"],
+html[data-theme="light"] [style*="color: #fff"] { color: var(--lt-text) !important; }
+
+html[data-theme="light"] [style*="color: #aaa"],
+html[data-theme="light"] [style*="color: #888"],
+html[data-theme="light"] [style*="color: #777"] { color: var(--lt-muted) !important; }
+
+html[data-theme="light"] [style*="color: #ffaa00"],
+html[data-theme="light"] [style*="color:#ffaa00"] { color: var(--lt-warn) !important; }
+
+html[data-theme="light"] [style*="color: #0ff"],
+html[data-theme="light"] [style*="color: #7fd8ff"] { color: #035a87 !important; }
+
+html[data-theme="light"] [style*="border: 1px solid #00bfff"] { border-color: var(--lt-accent) !important; }
+html[data-theme="light"] [style*="border-color: #00bfff"] { border-color: var(--lt-accent) !important; }
+html[data-theme="light"] [style*="rgba(0, 191, 255"] { border-color: var(--lt-border) !important; }
+
+html[data-theme="light"] [style*="background: rgba(0,0,0,0.6)"] { background: rgba(255, 255, 255, 0.85) !important; }
+html[data-theme="light"] [style*="background: rgba(255, 170, 0, 0.07)"] { background: rgba(180, 83, 9, 0.08) !important; }
+html[data-theme="light"] [style*="background-color: #0a0a0a"] { background-color: var(--lt-bg) !important; }
+
+/* Price-range badges: keep a light chip with dark text */
+html[data-theme="light"] .badge[style*="background: #12303d"] {
+  background: #d6edf9 !important;
+  color: #035a87 !important;
+}
+
+/* Service accordions (home page) */
+html[data-theme="light"] .service-accordion .accordion-item { background: var(--lt-panel); border-color: var(--lt-accent); color: #1a2733; }
+html[data-theme="light"] .service-accordion .accordion-button { color: var(--lt-accent); }
+html[data-theme="light"] .service-accordion .accordion-button:not(.collapsed) { background: #e3f2fa; color: var(--lt-accent); }
+html[data-theme="light"] .service-accordion .accordion-body { color: #1a2733; }
+html[data-theme="light"] .service-time { background: #e3f2fa; color: #035a87; }
