@@ -1,0 +1,76 @@
+/* ==========================================================================
+   England Technologies tech support: print stylesheet.
+   Linked last, with media="print". Shows every service in full (the web page
+   keeps them collapsed), drops the interactive chrome, and prints dark text
+   on white whichever theme is active on screen.
+   ========================================================================== */
+
+@page { margin: 14mm; }
+
+html, body, .hero, main, footer {
+    background: #fff !important;
+    background-image: none !important;
+}
+.bg-pattern, header, .nav-drawer, .nav-drawer-overlay, .back-to-top,
+.service-jump, .menu-toggle-btn, .btn, .accordion-button::after,
+.hero .d-flex.gap-2, iframe, .no-print { display: none !important; }
+
+html body, html[data-theme] body *:not(a) {
+    color: #000 !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
+    animation: none !important;
+    transition: none !important;
+}
+body { font-size: 11pt; line-height: 1.4; }
+
+.hero { min-height: 0 !important; padding: 0 0 .75rem !important; }
+.hero-title { font-size: 20pt !important; margin-bottom: .5rem !important; }
+.verse-box, .card, .accordion-item {
+    background: #fff !important;
+    border: 1px solid #888 !important;
+    border-radius: 4px !important;
+    backdrop-filter: none !important;
+}
+section, .container { padding-top: .5rem !important; padding-bottom: .5rem !important; }
+h2 { font-size: 16pt; margin: 1rem 0 .4rem !important; }
+h3 { font-size: 13pt; }
+
+/* Services: one per row, all expanded, with price and time visible. */
+.service-accordion { max-width: none !important; display: block !important; }
+.service-accordion > div { width: 100% !important; margin-bottom: .6rem; }
+.service-accordion .accordion-collapse,
+.service-accordion .collapse:not(.show) {
+    display: block !important;
+    height: auto !important;
+    visibility: visible !important;
+}
+.service-accordion .accordion-button {
+    min-height: 0 !important;
+    padding: .5rem .75rem !important;
+    background: #f2f2f2 !important;
+}
+.service-accordion .accordion-body { padding: .5rem .75rem !important; }
+.service-badge, .service-time, .badge { border: 1px solid #888; background: #fff !important; }
+
+/* Keep each service or card together on one page; keep headings with their content. */
+.accordion-item, .card, .verse-box, li { break-inside: avoid; page-break-inside: avoid; }
+h1, h2, h3, h4 { break-after: avoid; page-break-after: avoid; }
+
+/* Show where links go, except in-page jumps and phone/mail links that already print their value. */
+a { text-decoration: underline; }
+a[href^="http"]:not([href*="localhost"])::after { content: " (" attr(href) ")"; font-size: 9pt; }
+
+footer { border-top: 1px solid #888; margin-top: 1rem; }
+footer img { height: 32px !important; }
+
+/* Print pages are narrow: stack every column full width so text never gets squeezed. */
+.row { display: block !important; margin-left: 0 !important; margin-right: 0 !important; }
+.row > * {
+    width: 100% !important; max-width: 100% !important;
+    flex: none !important; padding-left: 0 !important; padding-right: 0 !important;
+    margin-bottom: .5rem;
+}
+.service-category span { display: none !important; } /* "See services ↓" has no meaning on paper */
+.hero .row { margin-top: .75rem !important; }
+.row:has(> * > a.service-category) { display: none !important; } /* categories repeat the service list below */
