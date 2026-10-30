@@ -1,0 +1,57 @@
+/* Tech support top bar: sticky, slides away on scroll down, returns on scroll up.
+   Services dropdown: Services > categories (hover) > services (fly-out). */
+
+header.tn { position: sticky; top: 0; z-index: 1050; transition: transform .25s ease; }
+header.tn.tn-hidden { transform: translateY(-100%); }
+header.tn .navbar { margin-bottom: 0 !important; }
+header.tn .tn-link { color: #00bfff !important; text-decoration: none; padding: .5rem .75rem; display: block; white-space: nowrap; }
+header.tn .tn-link:hover { color: #7fd8ff !important; }
+
+.tn-items { display: none; align-items: center; list-style: none; margin: 0 0 0 auto; padding: 0; }
+@media (min-width: 768px) { .tn-items { display: flex; } }
+.tn-actions { display: flex; align-items: center; gap: .5rem; margin-left: .75rem; }
+@media (max-width: 767.98px) { .tn-actions { margin-left: auto; } }
+
+/* Dropdowns */
+.tn-dd, .tn-cat { position: relative; }
+.tn-menu, .tn-sub {
+    list-style: none; margin: 0; padding: .4rem 0; min-width: 300px;
+    background: rgba(13, 15, 18, 0.98); border: 1px solid rgba(0, 191, 255, 0.3); border-radius: 6px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .5);
+    position: absolute; z-index: 1060;
+    opacity: 0; visibility: hidden; transition: opacity .15s, visibility .15s;
+}
+.tn-menu { top: 100%; left: 0; }
+.tn-sub { top: -.4rem; left: 100%; min-width: 300px; }
+.tn-dd:hover > .tn-menu, .tn-dd:focus-within > .tn-menu, .tn-dd.open > .tn-menu,
+.tn-cat:hover > .tn-sub, .tn-cat:focus-within > .tn-sub, .tn-cat.open > .tn-sub { opacity: 1; visibility: visible; }
+.tn-menu .tn-link { padding: .4rem 1rem; }
+.tn-menu .tn-link:hover { background: rgba(0, 191, 255, .1); }
+.tn-cat > .tn-link { display: flex; justify-content: space-between; align-items: center; gap: 1.5rem; }
+.tn-cat > .tn-link::after { content: "\203A"; }
+.tn-caret::after { content: ""; display: inline-block; margin-left: .4rem; width: .4rem; height: .4rem; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: translateY(-2px) rotate(45deg); }
+
+/* Theme button (shares .menu-toggle-btn look) */
+.theme-toggle-btn { white-space: nowrap; }
+.theme-toggle-btn .tm { display: none; }
+html[data-theme-mode="auto"] .theme-toggle-btn .tm-auto,
+html[data-theme-mode="dark"] .theme-toggle-btn .tm-dark,
+html[data-theme-mode="light"] .theme-toggle-btn .tm-light { display: inline; }
+
+/* Links: blue instead of the purple from site.css (dark mode). Light mode uses --lt-link, already blue here. */
+html:not([data-theme="light"]) a:not(.navbar-brand):not(.drawer-link):not(.btn):not(.tn-link) { color: #4db8ff !important; }
+html:not([data-theme="light"]) a:not(.navbar-brand):not(.drawer-link):not(.btn):not(.tn-link):hover { color: #99d5ff !important; }
+
+/* Services page jump bar: fixed under the top bar; only shown once the list is reached. */
+.service-jump { position: fixed !important; left: 0; right: 0; top: var(--tn-h, 56px) !important; z-index: 1040;
+                transform: translateY(-100%); visibility: hidden; opacity: 0;
+                transition: top .25s ease, transform .25s ease, opacity .2s, visibility .2s; }
+html.tn-nav-hidden .service-jump { top: 0 !important; }
+.service-jump.show { transform: none; visibility: visible; opacity: 1; }
+
+/* Light theme */
+html[data-theme="light"] .tn-menu, html[data-theme="light"] .tn-sub {
+    background: #fff; border-color: var(--lt-border); box-shadow: 0 10px 30px rgba(15, 23, 42, .15);
+}
+html[data-theme="light"] header.tn .tn-link { color: var(--lt-accent) !important; }
+html[data-theme="light"] header.tn .tn-link:hover { color: var(--lt-link-hover) !important; background: var(--lt-accent-soft); }

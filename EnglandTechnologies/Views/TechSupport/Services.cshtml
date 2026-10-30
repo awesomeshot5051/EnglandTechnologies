@@ -1,0 +1,141 @@
+@{
+    ViewData["Title"] = "Services";
+}
+
+@using EnglandTechnologies.Models
+@{ var Categories = ServiceCatalog.Categories; }
+
+<style>
+    .service-category { transition: transform .15s, border-color .15s; }
+    .service-category:hover, .service-category:focus-visible { transform: translateY(-3px); border-color: #00bfff; }
+</style>
+
+<section id="services" class="container pt-5 pb-3">
+    <h1 class="text-center mb-3" style="color: #00bfff;">What I can help with</h1>
+    <p class="text-center mx-auto mb-4" style="color: #ddd; max-width: 700px;">
+        Whether something is broken, being replaced, or you just want it set up properly,
+        there is a session for it. Tap the box closest to your situation, or
+        <a href="/contact" style="color: #00bfff;">book a time</a> or <a href="tel:+19042580217" style="color: #00bfff;">call 904-258-0217</a> and tell me what is going on and I will point you to the right one.
+    </p>
+
+    <div class="row g-3">
+        @foreach (var c in Categories)
+        {
+            <div class="col-md-6">
+                <a href="#@c.Id" class="card h-100 text-decoration-none service-category">
+                    <div class="card-body">
+                        <h3 class="h5" style="color: #00bfff;">@c.Title</h3>
+                        <p class="mb-3" style="color: #ddd;">@string.Join(" · ", c.Intro)</p>
+                        <span style="color: #7fd8ff; font-weight: 600;">See services &darr;</span>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+</section>
+
+
+<style>
+    .service-accordion .accordion-item { background: rgba(20,22,30,.95); border: 1px solid #00bfff55; color: #ddd; }
+    .service-accordion .accordion-item { border-radius: .75rem; overflow: hidden; }
+    .service-accordion .accordion-button { background: transparent; color: #00bfff; box-shadow: none; gap: .5rem; flex-direction: column; align-items: flex-start; justify-content: center; min-height: 150px; padding: 1.5rem 3rem 1.5rem 1.5rem; position: relative; }
+    .service-accordion .accordion-button::after { content: ""; position: absolute; right: 1.25rem; top: 50%; width: .6rem; height: .6rem; margin-top: -.45rem; border-right: 2px solid #00bfff; border-bottom: 2px solid #00bfff; background: none; filter: none; transform: rotate(45deg); transition: transform .2s; }
+    .service-accordion .accordion-button:not(.collapsed)::after { transform: rotate(-135deg); margin-top: -.1rem; }
+    .service-accordion .accordion-button:not(.collapsed) { background: #12303d; color: #00bfff; }
+    .service-accordion .accordion-button::after { filter: invert(60%) sepia(90%) saturate(1500%) hue-rotate(160deg); }
+    .service-title { font-size: 1.25rem; font-weight: 600; }
+    .service-meta { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
+    .service-price { font-weight: bold; font-size: 1.1rem; }
+    .service-time { background: #12303d; color: #7fd8ff; }
+    .service-accordion .accordion-body { color: #ddd; padding: 1.25rem 1.5rem 1.5rem; }
+</style>
+
+<style>
+    .service-jump { position: sticky; top: 0; z-index: 50; padding: .6rem 1rem; text-align: center;
+                    background: var(--lt-panel, rgba(10,10,10,.92)); border-bottom: 1px solid #00bfff55; }
+    .service-jump a { display: inline-block; margin: .15rem .35rem; padding: .25rem .8rem; border: 1px solid #00bfff88;
+                      border-radius: 999px; text-decoration: none; font-size: .95rem; }
+</style>
+
+<div id="service-list">
+    <nav class="service-jump" id="serviceJump" aria-label="Service categories">
+        @foreach (var c in Categories)
+        {
+            <a href="#@c.Id" style="color: #00bfff;">@c.Title</a>
+        }
+    </nav>
+
+@foreach (var c in Categories)
+{
+    <section id="@c.Id" class="container py-4" style="scroll-margin-top: 6rem;">
+        <h3 class="h3 mb-4 text-center" style="color: #00bfff;">@c.Title</h3>
+
+        <div class="row g-4 align-items-start justify-content-center mx-auto service-accordion" style="max-width: 960px;" id="acc-@c.Id">
+            @foreach (var s in c.Items)
+            {
+                <div class="col-md-6"><div class="accordion-item" style="scroll-margin-top: 6rem;">
+                    <h4 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#svc-@s.Slug" aria-expanded="false" aria-controls="svc-@s.Slug">
+                            <span class="service-title">@s.Title</span>
+                            <span class="service-meta">
+                                <span class="service-price">@(s.PriceLabel ?? (s.Price is int pr ? $"${pr}" : "Hourly rates apply"))</span>
+                                <span class="badge rounded-pill text-nowrap service-time">Estimated Time: @s.Time</span>
+                            </span>
+                        </button>
+                    </h4>
+                    <div id="svc-@s.Slug" class="accordion-collapse collapse">
+                        <div class="accordion-body">
+                            <p class="mb-2">@s.Summary</p>
+                            <ul>
+                                @foreach (var b in s.Bullets)
+                                {
+                                    <li>@b</li>
+                                }
+                            </ul>
+                            @if (!string.IsNullOrEmpty(s.Note))
+                            {
+                                <p style="color: #aaa; font-size: 0.9rem;">@s.Note</p>
+                            }
+                            <a class="btn btn-outline-info" style="color: var(--et-accent, #00bfff) !important;" href="/contact?service=@s.Slug">Book appointment now</a>
+                        </div>
+                    </div>
+                </div></div>
+            }
+        </div>
+    </section>
+}
+</div>
+
+<section class="container py-5 text-center">
+    <h2 class="mb-3" style="color: #00bfff;">Not sure which one you need?</h2>
+    <p style="color: #ddd;">Book a time or call and describe what is going on, and I will point you to the right one. Rates and policies are on the <a href="/#rates">home page</a>.</p>
+    <div class="d-flex gap-2 justify-content-center flex-wrap">
+        <a class="btn btn-outline-info" style="color: var(--et-accent, #00bfff) !important;" href="/contact">Book Online</a>
+        <a class="btn btn-outline-light" style="color: var(--et-btn-text, #e0e0e0) !important;" href="/contactus">Contact Us</a>
+    </div>
+</section>
+
+@section Scripts {
+<script>
+    $(function () {
+        // Category bar: appears once you scroll down to the list, and tucks in under the main top bar.
+        const jump = document.getElementById('serviceJump'), list = document.getElementById('service-list');
+        const check = () => jump.classList.toggle('show', list.getBoundingClientRect().top < 60 && window.scrollY > 50);
+        $(window).on('scroll resize', check);
+        check();
+
+        // Links like /services#svc-data-recovery open that service's panel.
+        const openFromHash = () => {
+            const h = location.hash;
+            if (!h.startsWith('#svc-')) return;
+            const panel = document.querySelector(h);
+            if (!panel) return;
+            bootstrap.Collapse.getOrCreateInstance(panel, { toggle: false }).show();
+            panel.closest('.accordion-item').scrollIntoView({ block: 'center' });
+        };
+        $(window).on('hashchange', openFromHash);
+        openFromHash();
+    });
+</script>
+}

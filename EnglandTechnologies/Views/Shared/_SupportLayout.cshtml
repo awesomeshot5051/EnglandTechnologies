@@ -1,3 +1,4 @@
+@using EnglandTechnologies.Models
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,6 +37,7 @@
         .hero-title { text-wrap: balance; }
     </style>
     <link rel="stylesheet" href="~/css/theme-light.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/topbar.css" asp-append-version="true" />
     <style>
         /* Light theme: use the brand blue for links instead of the default purple. */
         html[data-theme="light"] { --lt-link: #0077b6; --lt-link-hover: #005a8c; }
@@ -46,18 +48,45 @@
 <body>
 <div class="bg-pattern"></div>
 
-<header>
-    <nav class="navbar navbar-expand navbar-dark bg-dark border-bottom box-shadow mb-3">
+<header class="tn" id="topBar">
+    <nav class="navbar navbar-expand navbar-dark bg-dark border-bottom box-shadow">
         <div class="container-fluid">
             <a class="navbar-brand d-flex align-items-center" href="/">
                 <img src="/etico-96x96.png" alt="ET" width="40" height="40" class="d-inline-block align-text-top rounded me-2"/>
-                <span class="d-none d-sm-inline">England Technologies Tech Support</span>
-                <span class="d-sm-none">England Technologies</span>
+                <span class="d-none d-lg-inline">England Technologies Tech Support</span>
+                <span class="d-lg-none">England Technologies</span>
             </a>
-            <a class="nav-link d-none d-md-block ms-auto me-2 me-sm-3" style="color: #00bfff;" href="/#services">Services</a>
-            <a class="nav-link d-none d-sm-block ms-auto ms-md-0 me-2 me-sm-3" style="color: #00bfff;" href="/about">About</a>
-            <a class="nav-link d-none d-sm-block me-2 me-sm-3" style="color: #00bfff;" href="/contact">Book</a>
-            <button class="menu-toggle-btn ms-auto ms-sm-0" id="menuToggleBtn" aria-label="Open menu">&#9776; Menu</button>
+            <ul class="tn-items">
+                <li><a class="tn-link" href="/">Home</a></li>
+                <li class="tn-dd">
+                    <a class="tn-link tn-caret" href="/services" aria-haspopup="true">Services</a>
+                    <ul class="tn-menu">
+                        @foreach (var c in ServiceCatalog.Categories)
+                        {
+                            <li class="tn-cat">
+                                <a class="tn-link" href="/services#@c.Id" aria-haspopup="true">@c.Title</a>
+                                <ul class="tn-sub">
+                                    @foreach (var sv in c.Items)
+                                    {
+                                        <li><a class="tn-link" href="/services#svc-@sv.Slug">@sv.Title</a></li>
+                                    }
+                                </ul>
+                            </li>
+                        }
+                    </ul>
+                </li>
+                <li><a class="tn-link" href="/#rates">Rates</a></li>
+                <li><a class="tn-link" href="/about">About</a></li>
+                <li><a class="tn-link" href="/contact">Book</a></li>
+                <li><a class="tn-link" href="/contactus">Contact</a></li>
+                <li><a class="tn-link" href="/legal">Legal</a></li>
+            </ul>
+            <div class="tn-actions">
+                <button class="menu-toggle-btn theme-toggle-btn" id="themeToggleBtn" type="button" aria-label="Change color mode: Auto, Dark or Light" title="Color mode: click to switch Auto / Dark / Light">
+                    <span class="tm tm-auto">&#9680; Auto</span><span class="tm tm-dark">&#9790; Dark</span><span class="tm tm-light">&#9728; Light</span>
+                </button>
+                <button class="menu-toggle-btn" id="menuToggleBtn" aria-label="Open menu">&#9776; Menu</button>
+            </div>
         </div>
     </nav>
 </header>
@@ -71,13 +100,16 @@
     </div>
 
     <a class="drawer-link" href="/">Home</a>
-    <a class="drawer-link" href="/#services">Services</a>
+    <a class="drawer-link" href="/services">Services</a>
+    @foreach (var c in ServiceCatalog.Categories)
+    {
+        <a class="drawer-link" style="padding-left: 26px; font-size: .85rem;" href="/services#@c.Id">@c.Title</a>
+    }
     <a class="drawer-link" href="/#rates">Rates and Policies</a>
     <a class="drawer-link" href="/contact">Book Online</a>
     <a class="drawer-link" href="/about">About Me</a>
     <a class="drawer-link" href="/contactus">Contact Us</a>
-    <a class="drawer-link" href="/privacy">Privacy Policy</a>
-    <a class="drawer-link" href="/terms">Terms and Conditions</a>
+    <a class="drawer-link" href="/legal">Privacy &amp; Terms</a>
 </nav>
 
 <main>
@@ -86,7 +118,7 @@
 
 <footer class="footer mt-auto">
     <div class="container text-center py-3" style="color: #777;">
-        <p class="mb-1"><a href="/about" style="color: #00bfff;">About Me</a> &middot; <a href="/contactus" style="color: #00bfff;">Contact Us</a> &middot; <a href="/privacy" style="color: #00bfff;">Privacy Policy</a> &middot; <a href="/terms" style="color: #00bfff;">Terms and Conditions</a> &middot; <a href="/contact" style="color: #00bfff;">Book Online</a> &middot; <a href="tel:+19042580217" style="color: #00bfff;">904-258-0217</a> &middot; <a href="mailto:contact.techsupport@englandtechnologies.net" style="color: #00bfff;">contact.techsupport@englandtechnologies.net</a></p>
+        <p class="mb-1"><a href="/about" style="color: #00bfff;">About Me</a> &middot; <a href="/contactus" style="color: #00bfff;">Contact Us</a> &middot; <a href="/legal" style="color: #00bfff;">Privacy Policy &amp; Terms</a> &middot; <a href="/services" style="color: #00bfff;">Services</a> &middot; <a href="/contact" style="color: #00bfff;">Book Online</a> &middot; <a href="tel:+19042580217" style="color: #00bfff;">904-258-0217</a> &middot; <a href="mailto:contact.techsupport@englandtechnologies.net" style="color: #00bfff;">contact.techsupport@englandtechnologies.net</a></p>
         <p>&copy; 2026 England Technologies – All Rights Reserved</p>
         
         Certified by:
@@ -108,12 +140,47 @@
         $('.drawer-link').on('click', close);
         $(document).on('keydown', e => { if (e.key === 'Escape') close(); });
 
+        $('#themeToggleBtn').on('click', () => window.etTheme.cycle());
+
         const $top = $('#backToTop');
         const toggleTop = () => $top.toggleClass('show', window.scrollY > 50);
         $(window).on('scroll', toggleTop);
         toggleTop();
         $top.on('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+        // Top bar: hides when scrolling down, comes back on a small scroll up (or near the top of the page).
+        const bar = document.getElementById('topBar'), root = document.documentElement;
+        const setH = () => root.style.setProperty('--tn-h', bar.offsetHeight + 'px');
+        setH();
+        $(window).on('resize', setH);
+        let lastY = window.scrollY, ticking = false;
+        const setHidden = h => { bar.classList.toggle('tn-hidden', h); root.classList.toggle('tn-nav-hidden', h); };
+        $(window).on('scroll', () => {
+            if (ticking) return;
+            ticking = true;
+            requestAnimationFrame(() => {
+                const y = window.scrollY, dy = y - lastY;
+                if (y < 80 || bar.matches(':focus-within')) setHidden(false);
+                else if (dy > 6) setHidden(true);
+                else if (dy < -4) setHidden(false);
+                if (Math.abs(dy) > 4) lastY = y;
+                ticking = false;
+            });
+        });
+
+        // Touch screens have no hover: tap a dropdown title once to open it, again to follow the link.
+        if (window.matchMedia('(hover: none)').matches) {
+            $('.tn-dd > a, .tn-cat > a').on('click', function (e) {
+                const $li = $(this).parent();
+                if (!$li.hasClass('open')) {
+                    e.preventDefault();
+                    $li.siblings().removeClass('open').find('.open').removeClass('open');
+                    $li.addClass('open');
+                }
+            });
+        }
     });
 </script>
+@RenderSection("Scripts", required: false)
 </body>
 </html>

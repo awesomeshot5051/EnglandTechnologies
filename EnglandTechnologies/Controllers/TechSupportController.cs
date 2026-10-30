@@ -15,9 +15,14 @@ public class TechSupportController : Controller
 
     public IActionResult ContactUs() => View();
 
-    public IActionResult Privacy() => View();
+    public IActionResult Services() => View();
 
-    public IActionResult Terms() => View();
+    public IActionResult Legal() => View();
+
+    // Privacy and Terms now share one collapsible page; old links keep working.
+    public IActionResult Privacy() => RedirectPermanent("/legal#privacy");
+
+    public IActionResult Terms() => RedirectPermanent("/legal#terms");
 
     // Scheduling is handled by Easy!Appointments; this page just frames it.
     // ?service=<slug> preselects a service. Easy!Appointments skips straight to the

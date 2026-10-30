@@ -37,10 +37,10 @@ html[data-theme="light"] body {
   color: var(--lt-text);
 }
 
-html[data-theme="light"] a:not(.navbar-brand):not(.drawer-link):not(.btn) {
+html[data-theme="light"] a:not(.navbar-brand):not(.drawer-link):not(.btn):not(.tn-link) {
   color: var(--lt-link) !important;
 }
-html[data-theme="light"] a:not(.navbar-brand):not(.drawer-link):not(.btn):hover {
+html[data-theme="light"] a:not(.navbar-brand):not(.drawer-link):not(.btn):not(.tn-link):hover {
   color: var(--lt-link-hover) !important;
 }
 

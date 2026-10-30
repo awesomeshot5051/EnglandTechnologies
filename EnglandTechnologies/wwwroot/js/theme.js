@@ -1,9 +1,19 @@
 /* Theme selection. Loaded synchronously in <head> so the right theme is set before first paint.
-   Order: 1) the browser's preference (prefers-color-scheme), which browsers derive from the
-   OS setting when set to "auto"; 2) a direct light/dark query as a second check;
-   3) dark if neither can be determined. */
+   The visitor's choice (auto | dark | light) is saved in localStorage under "et-theme-mode".
+   "auto" follows the browser's prefers-color-scheme (derived from the OS setting), and
+   falls back to dark if that cannot be determined. window.etTheme exposes the mode to the toggle button. */
 (function () {
   var root = document.documentElement;
+  var KEY = 'et-theme-mode';
+  var MODES = ['auto', 'dark', 'light'];
+
+  function getMode() {
+    try {
+      var m = localStorage.getItem(KEY);
+      if (MODES.indexOf(m) !== -1) return m;
+    } catch (e) { /* storage blocked */ }
+    return 'auto';
+  }
 
   function detect() {
     try {
@@ -16,11 +26,26 @@
   }
 
   function apply() {
-    var theme = detect();
+    var mode = getMode();
+    var theme = mode === 'auto' ? detect() : mode;
+    root.setAttribute('data-theme-mode', mode);
     root.setAttribute('data-theme', theme);
     root.setAttribute('data-bs-theme', theme);
     root.style.colorScheme = theme;
   }
+
+  function setMode(mode) {
+    try { localStorage.setItem(KEY, mode); } catch (e) { /* ignore */ }
+    apply();
+  }
+
+  function cycle() {
+    var next = MODES[(MODES.indexOf(getMode()) + 1) % MODES.length];
+    setMode(next);
+    return next;
+  }
+
+  window.etTheme = { getMode: getMode, setMode: setMode, cycle: cycle };
 
   apply();
 
